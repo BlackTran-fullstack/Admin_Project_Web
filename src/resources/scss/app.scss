@@ -1,0 +1,30 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    display: flex;
+
+    font-size: 1.6rem;
+    font-family: "Poppins";
+}
+
+main {
+    margin-left: 270px;
+    padding: 45px;
+}
+
+main.collapsed {
+    margin-left: 85px;
+}
+
+a {
+    text-decoration: none;
+}
+
+@import "navbar";
+@import "accounts";

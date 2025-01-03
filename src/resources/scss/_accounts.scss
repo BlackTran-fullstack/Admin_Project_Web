@@ -1,0 +1,164 @@
+#accounts {
+    width: 100%;
+}
+
+#accounts .container .header-page {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#accounts .container .header-page .search {
+    position: relative;
+    width: 250px;
+    height: 35px;
+}
+
+#accounts .container .header-page .search i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.6rem;
+    color: #000;
+
+    z-index: 99;
+}
+
+#accounts .container .header-page .search input {
+    width: 100%;
+    height: 100%;
+    padding-left: 45px;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    outline: none;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    color: #000;
+}
+
+#accounts .container .header-page .search input:focus {
+    border-color: #b88e2f;
+}
+
+#accounts .container .header-page .search input::placeholder {
+    color: #000;
+}
+
+#accounts .container .header-page .title {
+    font-size: 3.2rem;
+    font-weight: 600;
+}
+
+#accounts .content-page {
+    margin-top: 30px;
+}
+
+#accounts .content-page .table {
+    width: 100%;
+    border: 1px solid #e8e8e8;
+    border-collapse: separate;
+    border-radius: 12px;
+    border-spacing: 0;
+
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px;
+}
+
+#accounts .content-page .table th,
+#accounts .content-page .table td {
+    border-bottom: 1px solid #e8e8e8;
+    padding: 15px 40px;
+
+    font-size: 1.4rem;
+    text-align: left;
+    vertical-align: middle;
+}
+
+#accounts .content-page .table th {
+    font-weight: 500;
+}
+
+#accounts .content-page .table tbody tr {
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#accounts .content-page .table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+#accounts .content-page .table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#accounts .content-page .table tbody .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+
+    object-fit: cover;
+}
+
+#accounts .content-page .table tbody .btn-ban {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+#accounts .content-page .table tbody .btn-ban:hover {
+    background-color: #d32f2f;
+}
+
+#accounts .content-page .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+
+    margin-top: 32px;
+}
+
+#accounts .content-page .pagination .info {
+    font-size: 1.2rem;
+    color: #9f9f9f;
+}
+
+#accounts .content-page .pagination .actions {
+    display: flex;
+    align-items: center;
+}
+
+#accounts .content-page .pagination .actions button {
+    padding: 10px 18px;
+    border: 1px solid #e8e8e8;
+    outline: none;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+
+#accounts .content-page .pagination .actions button:first-child {
+    border-radius: 12px 0 0 12px;
+}
+
+#accounts .content-page .pagination .actions button:last-child {
+    border-left: none;
+    border-radius: 0 12px 12px 0;
+}
+
+#accounts .content-page .pagination .actions button.disabled {
+    cursor: not-allowed;
+    color: #9f9f9f;
+}
