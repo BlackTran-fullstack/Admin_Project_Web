@@ -6,11 +6,11 @@ function paginatedResults(model) {
         const order = req.query.order === "desc" ? -1 : 1;
 
         const search = req.query.search || "";
-        const searchFields = req.query.fields
+        const searchFields = req.query.fields 
             ? req.query.fields.split(",")
             : ["name", "email"];
 
-        const query = searchFields.length
+        const query = searchFields.length 
             ? {
                   $or: searchFields.map((field) => ({
                       [field]: { $regex: search, $options: "i" },
