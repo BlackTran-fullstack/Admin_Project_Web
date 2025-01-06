@@ -1,0 +1,61 @@
+<main id="manageOrder">
+    <div class="container">
+        <div class="header-page">
+            <h1 class="title">Manage Orders</h1>
+
+            <div class="actions">
+                <div class="action search">
+                    <i class="fa-solid fa-search"></i>
+
+                    <input type="text" class="input-search" placeholder="Search..." />
+                </div>
+            </div>
+        </div>
+
+        <div class="content-page">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Order Date</th>
+                        <th>Order Status</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>2021-10-10</td>
+                        <td>Processing</td>
+                        <td>$100.00</td>
+                        <td>
+                            <button class="btn btn-view">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <div class="info">
+                    <p class="text">Showing 1 to 1 of 1 entries</p>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <button class="btn btn-next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
