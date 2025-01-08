@@ -1,43 +1,30 @@
 const Products = require("../models/Products");
 const Orders = require("../models/Orders");
 const OrderDetails = require("../models/OrderDetails");
+const Users = require("../models/Users");
 
 const { mutipleMongooseToObject } = require("../../util/mongoose");
 const { mongooseToObject } = require("../../util/mongoose");
 
 class OrdersController {
-    // [GET] /orders/allOrders
-    async allOrders(req, res) {
-        try {
-            const orders = await Orders.find().sort({
-                createdAt: -1,
-            });
-            res.render("order", {
-                orders: mutipleMongooseToObject(orders),
-                user: mongooseToObject(req.user),
-            });
-        } catch (error) {
-            console.error("Error in allOrders:", error);
-            res.status(500).json({
-                success: false,
-                errors: ["Server error. Please try again later."],
-            });
+    // [GET] /orders/api
+    async allOrders(req, res, next) {
+        if (res.paginatedResults) {
+            res.json(res.paginatedResults);
+        } else {
+            res.status(500).json({ message: "Pagination results not found" });
         }
     }
 
-    // [GET] /list-orders
-    async listOrders(req, res) {
+    // [GET] /orders
+    async getOrders(req, res) {
         try {
-            const userId = req.user.id;
-            const orders = await Orders.find({ userId }).sort({
-                createdAt: -1,
-            });
+            const orders = await Orders.find({});
             res.render("orders", {
                 orders: mutipleMongooseToObject(orders),
-                user: mongooseToObject(req.user),
             });
         } catch (error) {
-            console.error("Error in listOrders:", error);
+            console.error("Error in getOrders:", error);
             res.status(500).json({
                 success: false,
                 errors: ["Server error. Please try again later."],
