@@ -15,7 +15,7 @@ const Products = new Schema(
         brandsId: { type: Schema.Types.ObjectId, ref: "Brands" },
     },
     {
-        timestamps: true,
+        timestamps: true, 
     }
 );
 

@@ -1,4 +1,6 @@
 const Products = require("../models/Products");
+const Categories = require("../models/Categories");
+const Brands = require("../models/Brands");
 
 const { mutipleMongooseToObject } = require("../../util/mongoose");
 const { mongooseToObject } = require("../../util/mongoose");
@@ -7,9 +9,11 @@ class ProductsController {
     // [GET] /products
     getProducts(req, res, next) {
         Products.find({})
+            .populate("categoriesId", "name")
+            .populate("brandsId", "name")
             .then((products) => {
                 res.render("products", {
-                    products: mutipleMongooseToObject(products),
+                    products
                 });
             })
             .catch(next);
@@ -25,4 +29,4 @@ class ProductsController {
     }
 }
 
-module.exports = new ProductsController();
+module.exports = new ProductsController(); 

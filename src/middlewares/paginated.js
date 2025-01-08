@@ -8,7 +8,7 @@ function paginatedResults(model) {
         const search = req.query.search || "";
         const searchFields = req.query.fields 
             ? req.query.fields.split(",")
-            : ["name", "email"];
+            : ["name", "email"];  // Default fields
 
         const query = searchFields.length 
             ? {
@@ -23,15 +23,30 @@ function paginatedResults(model) {
 
             const totalPages = Math.ceil(totalDocuments / limit);
 
-            const results = await model
-                .find(query)
-                .sort({ [sortBy]: order })
-                .limit(limit)
-                .skip((page - 1) * limit)
-                .exec();
+            // const results = await model
+            //     .find(query)
+                
+            //     .sort({ [sortBy]: order })
+            //     .limit(limit)
+            //     .skip((page - 1) * limit)
+            //     .exec();
+
+
+            let results = model.find(query).sort({ [sortBy]: order }).limit(limit).skip((page - 1) * limit);
+
+            // Only populate "categoriesId" if it's a Product model
+            if (model.modelName === "Products") {
+                results = results.populate("categoriesId", "name");
+                results = results.populate("brandsId", "name");
+            }
+
+            // Execute the query
+            const populatedResults = await results.exec();
+
 
             res.paginatedResults = {
-                data: results,
+                //data: results,
+                data: populatedResults,
                 totalDocuments,
                 page,
                 totalPages,

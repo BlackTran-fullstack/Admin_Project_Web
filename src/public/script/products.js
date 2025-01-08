@@ -1,3 +1,5 @@
+
+//input search
 document.querySelector(".input-search").addEventListener("input", () => {
     const search = document.querySelector(".input-search").value;
     loadUsers(1, 5, "name", "asc", search);
@@ -8,6 +10,13 @@ document.querySelector(".input-search").addEventListener("input", () => {
 document.querySelector(".select-sort").addEventListener("change", () => {
     const sortBy = document.querySelector(".select-sort").value;
     loadUsers(1, 5, sortBy, "asc");
+});
+
+
+//filter theo option
+document.querySelector(".select-filter").addEventListener("change", () => {
+    const filterBy = document.querySelector(".select-filter").value;
+    loadUsers(1, 5, "name", "asc", "", filterBy);
 });
 
 
@@ -52,8 +61,14 @@ async function loadUsers(
         const usersTable = document.querySelector(".table tbody");
         usersTable.innerHTML = "";
 
-        data.data.forEach((user) => {
-            const date = new Date(user.createdAt);
+        data.data.forEach((product) => {
+
+            const categoryName = product.categoriesId ? product.categoriesId.name : "Unknown";
+
+            const brandName = product.brandsId ? product.brandsId.name : "Unknown";
+
+            const date = new Date(product.createdAt);
+
             const formattedDate = `${date
                 .getDate()
                 .toString()
@@ -61,35 +76,37 @@ async function loadUsers(
                 ${(date.getMonth() + 1).toString().padStart(2, "0")} - 
                 ${date.getFullYear()}`;
 
+            //const formattedDate = "26-12-2004";
+
             const row = `
                 <tr>
                     <td><img
-                            src="${user.imagePath}"
+                            src="${product.imagePath}"
                             alt=""
                             class="avatar"
                         /></td>
  
                         <td>
                             <p class="name">
-                                ${user.name}
+                                ${product.name}
                             </p>
                         </td>
 
                         <td>
                             <p class="categoriesId">
-                                ${user.categoriesId}
+                                ${categoryName}
                             </p>
                         </td>
 
                         <td>
                             <p class="brand">
-                                ${user.brandId}
+                                ${brandName}
                             </p>
                         </td>
 
                         <td>
                             <p class="price">
-                                ${user.price}
+                                ${product.price}
                             </p>
                         </td>
 
@@ -101,7 +118,7 @@ async function loadUsers(
 
                         <td>
                             <p class="role">
-                                ${user.stock}
+                                ${product.stock}
                             </p>
                         </td>
 

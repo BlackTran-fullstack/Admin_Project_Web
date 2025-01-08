@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Products = require("../../app/models/Products"); // Đảm bảo đường dẫn đúng
 
 async function connect() {
     try {
@@ -11,5 +12,7 @@ async function connect() {
         console.log("Connect failure!!!");
     }
 }
+
+
 
 module.exports = { connect };
