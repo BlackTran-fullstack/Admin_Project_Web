@@ -9,6 +9,10 @@ const paginatedResults = require("../middlewares/paginated");
 
 router.get("/api", paginatedResults(products), productsControllers.getPaginatedProducts);
 
+router.post("/api", productsControllers.createProduct);
+
+router.delete("/api/:id", productsControllers.deleteProduct);
+
 router.get("/", productsControllers.getProducts);
 
 module.exports = router;

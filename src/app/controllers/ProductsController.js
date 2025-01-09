@@ -1,9 +1,13 @@
+const mongoose = require("mongoose");
+
 const Products = require("../models/Products");
 const Categories = require("../models/Categories");
 const Brands = require("../models/Brands");
 
 const { mutipleMongooseToObject } = require("../../util/mongoose");
 const { mongooseToObject } = require("../../util/mongoose");
+
+const ObjectId = mongoose.Types.ObjectId; // Add this line to fix the error
 
 class ProductsController {
     // [GET] /products
@@ -27,6 +31,53 @@ class ProductsController {
             res.status(500).json({ message: "Pagination results not found" });
         }
     }
+
+    // [POST] /products/api
+    createProduct(req, res, next) {
+        const { name, price, category, stock, imagePath } = req.body;
+
+        // Tạo đối tượng sản phẩm mới
+        const newProduct = new Products({
+            name,
+            price,
+            categoriesId: new ObjectId(category), // Use new ObjectId here
+            stock,
+            imagePath,
+        });
+
+        // Lưu sản phẩm vào MongoDB
+        newProduct
+            .save()
+            .then((savedProduct) => {
+                // Populate the category and return the saved product
+                return savedProduct.populate("categoriesId", "name").then((populatedProduct) => {
+                    res.status(201).json(populatedProduct); // Return the populated product
+                });
+            })
+            .catch((error) => {
+                console.error("Error saving product:", error);
+                res.status(500).json({ message: "Failed to save product", error });
+            });
+    }
+
+    // [DELETE] /products/api/:id
+    deleteProduct(req, res, next) {
+        const { id } = req.params;
+
+        Products.findByIdAndDelete(id)
+            .then((deletedProduct) => {
+                if (deletedProduct) {
+                    res.json(deletedProduct);
+                } else {
+                    res.status(404).json({ message: "Product not found" });
+                }
+            })
+            .catch((error) => {
+                console.error("Error deleting product:", error);
+                res.status(500).json({ message: "Failed to delete product", error });
+            });
+    }
+
 }
 
 module.exports = new ProductsController(); 

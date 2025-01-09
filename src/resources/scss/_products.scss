@@ -96,7 +96,7 @@
             object-fit: cover;
           }
   
-          .btn-ban {
+          .btn-delete {
             background-color: #f44336;
             color: white;
             border: none;
@@ -110,6 +110,23 @@
   
             &:hover {
               background-color: #d32f2f;
+            }
+          }
+
+          .btn-update{
+            background-color:greenyellow;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s ease;
+  
+            &:hover {
+              background-color:darkgreen;
             }
           }
         }
