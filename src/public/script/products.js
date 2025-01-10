@@ -5,6 +5,8 @@ let currentSortBy = "name";
 let currentOrder = "asc";
 let currentSearch = "";
 let currentFilter = "";
+let currentBrand = "";
+let currentCategory = "";
 
 // Input search
 document.querySelector(".input-search").addEventListener("input", () => {
@@ -19,10 +21,23 @@ document.querySelector(".select-sort").addEventListener("change", () => {
 });
 
 // Filter theo option
-document.querySelector(".select-filter").addEventListener("change", () => {
-    currentFilter = document.querySelector(".select-filter").value;
-    loadUsers(1, currentLimit, currentSortBy, currentOrder, currentSearch, currentFilter);
+document.querySelector(".select-filter-category").addEventListener("change", () => {
+    currentCategory = document.querySelector(".select-filter-category").value;
+    console.log(currentFilter);
+    console.log(currentCategory);
+    console.log(currentBrand);
+    console.log(currentSearch);
+    console.log(currentSortBy);
+    console.log(currentOrder);
+    
+    loadUsers(1, currentLimit, currentSortBy, currentOrder, currentSearch, currentFilter, currentCategory, currentBrand);
 });
+
+
+document.querySelector(".select-filter-brand").addEventListener("change", () => {
+    currentBrand = document.querySelector(".select-filter-brand").value;
+    loadUsers(1, currentLimit, currentSortBy, currentOrder, currentSearch, currentFilter, currentCategory, currentBrand);
+})
 
 
 //add product
@@ -281,14 +296,16 @@ document.querySelectorAll(".creation-date").forEach((element) => {
     element.textContent = `${day} - ${month} - ${year}`;
 });
 
-// Hàm tải danh sách người dùng
+// Hàm tải danh sách người dùng 
 async function loadUsers(
     page = currentPage,
     limit = currentLimit,
     sortBy = currentSortBy,
     order = currentOrder,
     search = currentSearch,
-    filter = currentFilter
+    filter = currentFilter,
+    category = currentCategory,
+    brand = currentBrand
 ) {
     try {
         currentPage = page;
@@ -297,6 +314,8 @@ async function loadUsers(
         currentOrder = order;
         currentSearch = search;
         currentFilter = filter;
+        currentCategory = category;
+        currentBrand = brand;
 
         const queryParameters = new URLSearchParams({
             page,
@@ -305,6 +324,8 @@ async function loadUsers(
             order,
             search,
             filter,
+            category,
+            brand,
             fields: "name,email",
         });
 

@@ -1,11 +1,23 @@
 function paginatedResults(model) {
     return async (req, res, next) => {
+
+        console.log("model.modelName: ", model.modelName);
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
         const sortBy = req.query.sortBy || "_id";
-        const order = req.query.order === "desc" ? -1 : 1;
+        const order = req.query.order === "desc" ? -1 : 1; 
 
         const search = req.query.search || "";
+
+        const filter = req.query.filter || "";
+
+        // Lọc theo category và brand
+        const categoryFilter = req.query.category || "";
+        const brandFilter = req.query.brand || "";
+        
+        console.log("categoryFilter: ", categoryFilter);
+        console.log("brandFilter: ", brandFilter);
+
         const searchFields = req.query.fields 
             ? req.query.fields.split(",")
             : ["name", "email"];  // Default fields
@@ -17,6 +29,16 @@ function paginatedResults(model) {
                   })),
               }
             : {};
+
+
+        // Thêm điều kiện lọc Category và Brand nếu có
+        if (categoryFilter) {
+            query["categoriesId"] = categoryFilter;
+        }
+        
+        if (brandFilter) {
+            query["brandsId"] = brandFilter;
+        }
 
         try {
             const totalDocuments = await model.countDocuments(query).exec();
