@@ -70,6 +70,17 @@ document.getElementById("addProductForm").onsubmit = async function (e) {
         //imagePath: document.getElementById("productImage").files,
     };
 
+     // Kiểm tra điều kiện price và stock phải là số
+     if (isNaN(productData.price) || productData.price <= 0) {
+        alert("Price must be a valid number greater than 0.");
+        return; // Ngừng thực hiện nếu giá không hợp lệ
+    }
+
+    if (isNaN(productData.stock) || productData.stock < 0) {
+        alert("Stock must be a valid non-negative number.");
+        return; // Ngừng thực hiện nếu số lượng không hợp lệ
+    }
+
     try {
         // Gửi dữ liệu đến server qua API
         const response = await fetch("/products/api", {
@@ -181,6 +192,17 @@ document.getElementById("updateProductForm").onsubmit = async function (e) {
         stock: parseInt(document.getElementById("editProductStock").value),
         imagePath: document.getElementById("editProductImage").value,
     };
+
+     // Kiểm tra điều kiện price và stock phải là số
+     if (isNaN(productData.price) || productData.price <= 0) {
+        alert("Price must be a valid number greater than 0.");
+        return; // Ngừng thực hiện nếu giá không hợp lệ
+    }
+
+    if (isNaN(productData.stock) || productData.stock < 0) {
+        alert("Stock must be a valid non-negative number.");
+        return; // Ngừng thực hiện nếu số lượng không hợp lệ
+    }
 
     const productId = document.getElementById("editProductId").value;
 
