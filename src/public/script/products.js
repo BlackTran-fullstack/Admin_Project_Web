@@ -28,12 +28,17 @@ document.querySelector(".select-filter").addEventListener("change", () => {
 //add product
 document.getElementById("btn-create").onclick = function() {
     // alert("hello");
-    document.getElementById("addProductDialog").style.display = "block";
+    document.getElementById("addProductDialog").style.display = "flex";
 };
 
-// Đóng dialog
+// Đóng dialog create product
 document.getElementById("closeDialog").onclick = function () {
     document.getElementById("addProductDialog").style.display = "none";
+};
+
+// Đóng dialog update product
+document.getElementById("closeUpdateDialog").onclick = function () {
+    document.getElementById("updateProductDialog").style.display = "none";
 };
 
 document.getElementById("addProductForm").onsubmit = async function (e) {
@@ -44,8 +49,10 @@ document.getElementById("addProductForm").onsubmit = async function (e) {
         name: document.getElementById("productName").value,
         price: parseFloat(document.getElementById("productPrice").value),
         category: document.getElementById("productCategory").value,
+        brand: document.getElementById("productBrand").value,
         stock: parseInt(document.getElementById("productStock").value),
         imagePath: document.getElementById("productImage").value,
+        //imagePath: document.getElementById("productImage").files,
     };
 
     try {
@@ -77,41 +84,6 @@ document.getElementById("addProductForm").onsubmit = async function (e) {
     }
 };
 
-// function addProductToTable(product) {
-//     const usersTable = document.querySelector(".table tbody");
-
-//     const categoryName = product.categoriesId ? product.categoriesId.name : "Unknown";
-//     const brandName = product.brandsId ? product.brandsId.name : "Unknown";
-
-//     const date = new Date(product.createdAt);
-//     const formattedDate = `${date.getDate().toString().padStart(2, "0")} - 
-//                            ${(date.getMonth() + 1).toString().padStart(2, "0")} - 
-//                            ${date.getFullYear()}`;
-
-//     const row = `
-//         <tr>
-//             <td><img src="${product.imagePath}" alt="" class="avatar" /></td>
-//             <td><p class="name">${product.name}</p></td>
-//             <td><p class="categoriesId">${categoryName}</p></td>
-//             <td><p class="brand">${brandName}</p></td>
-//             <td><p class="price">${product.price}</p></td>
-//             <td><p class="creation-date">${formattedDate}</p></td>
-//             <td><p class="role">${product.stock}</p></td>
-//             <td>
-//                 <button class="btn btn-update">
-//                     <i class="fa-solid fa-pen"></i>
-//                 </button>
-//                 <button class="btn btn-delete">
-//                     <i class="fa-solid fa-trash"></i>
-//                 </button>
-//             </td>
-//         </tr>
-//     `;
-
-//     usersTable.innerHTML += row;
-// }
-
-
 // Hàm xử lý sự kiện xóa sản phẩm
 document.querySelector(".table").addEventListener("click", async (e) => {
     if (e.target && e.target.closest(".btn-delete")) {
@@ -128,6 +100,7 @@ document.querySelector(".table").addEventListener("click", async (e) => {
                     // Xóa sản phẩm khỏi bảng hiển thị
                     const row = e.target.closest("tr");
                     row.remove();
+                    loadUsers();
                 } else {
                     alert("Failed to delete product");
                 }
@@ -136,7 +109,124 @@ document.querySelector(".table").addEventListener("click", async (e) => {
             }
         }
     }
+    // Xử lý sự kiện cập nhật sản phẩm
+    if(e.target && e.target.closest(".btn-update")){
+        const row = e.target.closest("tr"); // Lấy hàng chứa nút "Update"
+        if (!row) {
+            console.error("Không tìm thấy hàng tương ứng.");
+            return;
+        }
+
+        // Lấy thông tin từ các cột trong hàng
+        const productId = row.dataset.productId;
+        const name = row.querySelector(".name").textContent.trim();
+        const category = row.querySelector(".categoriesId").textContent.trim();
+        const brand = row.querySelector(".brand").textContent.trim();
+        const price = row.querySelector(".price").textContent.trim();
+        const stock = row.querySelector(".role").textContent.trim();
+        const imagePath = row.querySelector("img").src;
+
+        // Điền thông tin vào form dialog
+        document.getElementById("editProductId").value = productId;
+        document.getElementById("editProductName").value = name;
+        //document.getElementById("editProductCategory").value = category;
+        //document.getElementById("editProductBrand").value = brand;
+        document.getElementById("editProductPrice").value = price;
+        document.getElementById("editProductStock").value = stock;
+        document.getElementById("editProductImage").value = imagePath;
+
+        // So khớp giá trị với các option của category và brand
+        const categorySelect = document.getElementById("editProductCategory");
+        const brandSelect = document.getElementById("editProductBrand");
+
+        // Tìm và chọn option phù hợp
+        Array.from(categorySelect.options).forEach(option => {
+            option.selected = option.textContent.trim() === category;
+        });
+
+        Array.from(brandSelect.options).forEach(option => {
+            option.selected = option.textContent.trim() === brand;
+        });
+
+        // Hiển thị dialog
+        document.getElementById("updateProductDialog").style.display = "flex";
+    }
 });
+
+// Xử lý sự kiện cập nhật sản phẩm
+document.getElementById("updateProductForm").onsubmit = async function (e) {
+    e.preventDefault(); // Ngăn reload trang
+
+    // Thu thập thông tin từ form
+    const productData = {
+        name: document.getElementById("editProductName").value,
+        price: parseFloat(document.getElementById("editProductPrice").value),
+        category: document.getElementById("editProductCategory").value,
+        brand: document.getElementById("editProductBrand").value,
+        stock: parseInt(document.getElementById("editProductStock").value),
+        imagePath: document.getElementById("editProductImage").value,
+    };
+
+    const productId = document.getElementById("editProductId").value;
+
+    try {
+        // Gửi dữ liệu đến server qua API
+        const response = await fetch(`/products/api/${productId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(productData),
+        });
+
+        if (response.ok) {
+            const updatedProduct = await response.json();
+
+            // Cập nhật thông tin sản phẩm trong bảng hiển thị
+            const row = document.querySelector(`tr[data-product-id="${productId}"]`);
+
+            const categoryName = updatedProduct.categoriesId ? updatedProduct.categoriesId.name : "Unknown";
+
+            const brandName = updatedProduct.brandsId ? updatedProduct.brandsId.name : "Unknown";
+
+            const date = new Date(updatedProduct.createdAt);
+
+            const formattedDate = `${date
+                .getDate()
+                .toString()
+                .padStart(2, "0")} - ${(date.getMonth() + 1)
+                .toString()
+                .padStart(2, "0")} - ${date.getFullYear()}`;
+
+            row.innerHTML = `
+                <td><img src="${updatedProduct.imagePath}" alt="" class="avatar" /></td>
+                <td><p class="name">${updatedProduct.name}</p></td>
+                <td><p class="categories
+                Id">${categoryName}</p></td>
+                <td><p class="brand">${brandName}</p></td>
+                <td><p class="price">${updatedProduct.price}</p></td>
+                <td><p class="creation-date">${formattedDate}</p></td>
+                <td><p class="role">${updatedProduct.stock}</p></td>
+
+                <td>
+                    <button class="btn btn-update">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="btn btn-delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            loadUsers();
+            // Đóng dialog
+            document.getElementById("updateProductDialog").style.display = "none";
+        } else {
+            alert("Failed to update product");
+        }
+    } catch (error) {
+        console.error("Error updating product:", error);
+    }
+};
 
 // Cập nhật hàm addProductToTable để bao gồm data-product-id
 function addProductToTable(product) {
@@ -171,6 +261,7 @@ function addProductToTable(product) {
     `;
 
     usersTable.innerHTML += row;
+    loadUsers();
 }
 
 

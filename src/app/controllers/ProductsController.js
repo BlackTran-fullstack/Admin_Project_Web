@@ -34,13 +34,14 @@ class ProductsController {
 
     // [POST] /products/api
     createProduct(req, res, next) {
-        const { name, price, category, stock, imagePath } = req.body;
+        const { name, price, category, brand, stock, imagePath } = req.body;
 
         // Tạo đối tượng sản phẩm mới
         const newProduct = new Products({
             name,
             price,
             categoriesId: new ObjectId(category), // Use new ObjectId here
+            brandsId: new ObjectId(brand), // Use new ObjectId here
             stock,
             imagePath,
         });
@@ -61,7 +62,7 @@ class ProductsController {
     }
 
     // [DELETE] /products/api/:id
-    deleteProduct(req, res, next) {
+    deleteProduct(req, res, next) { 
         const { id } = req.params;
 
         Products.findByIdAndDelete(id)
@@ -76,6 +77,26 @@ class ProductsController {
                 console.error("Error deleting product:", error);
                 res.status(500).json({ message: "Failed to delete product", error });
             });
+    }
+
+    // [PUT] /products/api/:id
+    updateProduct(req, res, next) {
+        const { id } = req.params;
+        const { name, price, category, brand, stock, imagePath } = req.body;
+
+        Products.findByIdAndUpdate(id, { name, price, categoriesId: category, brandsId: brand, stock, imagePath }, { new: true })
+            .then((updatedProduct) => {
+                if (updatedProduct) {
+                    res.json(updatedProduct);
+                } else {
+                    res.status(404).json({ message: "Product not found" });
+                }
+            })
+            .catch((error) => {
+                console.error("Error updating product:", error);
+                res.status(500).json({ message: "Failed to update product", error });
+            });
+
     }
 
 }

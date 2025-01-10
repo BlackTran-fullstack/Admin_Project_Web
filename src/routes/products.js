@@ -13,6 +13,8 @@ router.post("/api", productsControllers.createProduct);
 
 router.delete("/api/:id", productsControllers.deleteProduct);
 
+router.put("/api/:id", productsControllers.updateProduct);
+
 router.get("/", productsControllers.getProducts);
 
 module.exports = router;
