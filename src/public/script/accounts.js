@@ -95,7 +95,7 @@ function updatePagination(currentPage, totalPages) {
         previousButton.classList.remove("disabled");
         previousButton.onclick = () => loadUsers(currentPage - 1);
     } else {
-        previousButton.classList.add("disabled");
+        previousButton.classList.add("disabled"); 
         previousButton.onclick = null;
     }
 

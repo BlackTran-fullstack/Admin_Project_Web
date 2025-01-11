@@ -27,6 +27,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // app.use(flash());
 
+app.use(express.json()); // Dành cho JSON
+
 // HTTP logger
 app.use(morgan("combined"));
 

@@ -1,0 +1,213 @@
+<main id="products">
+    <div class="container">
+        <div class="header-page">
+            <h1 class="title">Manager Products</h1>
+
+            <div class="actions">
+                <div class="action search">
+                    <i class="fa-solid fa-search"></i>
+
+                    <input
+                        type="text"
+                        class="input-search"
+                        placeholder="Search..."
+                    />
+                </div>
+            </div> 
+        </div>
+
+        <div class="add-group">
+            <button class="add-btn" id="btn-create">
+                <i class="fa-solid fa-plus"></i>
+                Create
+            </button>
+        </div>
+
+        <div class="sort-options">
+
+            <div class="sort-group">
+                <label for="sort">Sort by:</label>
+                <select id="sort" class="select-sort">
+                    <option value="name">Name</option>
+                    <option value="price">Price</option>
+                    <option value="createdAt">Creation Time</option>
+                </select>
+            </div>
+
+        </div> 
+
+        <div class="filter-options">
+            <div class="filter-group">
+                <label for="category">Category:</label>
+                <select id="category" class="select-filter-category">
+                    <option value="">All</option>
+                    <option value="673978e6d2067a8cc64f7dee">Table</option>
+                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
+                    <option value="673978e6d2067a8cc64f7def">Mirror</option>
+                    <option value="673979c4d2067a8cc64f7df1">Chair</option>
+                    <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
+                    <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
+                    <option value="67397ab9d2067a8cc64f7df5">Bed</option>
+                    <option value="673eeb15f80d6a76cf39967c">Others</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="brand">Brand:</label>
+                <select id="brand" class="select-filter-brand">
+                    <option value="">All</option>
+                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
+                    <option value="67449f674fc73c80de04b2a7">ModernHome</option>
+                    <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
+                    <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
+                    <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
+                    <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="content-page">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Images</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Brand</th>
+                        <th>Price</th>
+                        <th>Creation Time</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <div class="info">
+                    <p class="text"></p>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <button class="btn btn-next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addProductDialog" class="dialog" style="display: none;">
+        <div class="dialog-content">
+            <h2>Add New Product</h2>
+            <form id="addProductForm">
+                <label for="productName">Name:</label>
+                <input type="text" id="productName" name="name" required>
+                
+                <label for="productPrice">Price:</label>
+                <input type="number" id="productPrice" name="price" required>
+                
+                <label for="productCategory">Category:</label>
+                <select id="productCategory" name="category">
+                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
+                    <option value="673978e6d2067a8cc64f7dee">Table</option>
+                    <option value="673978e6d2067a8cc64f7def">Mirror</option>
+                    <option value="673979c4d2067a8cc64f7df1">Chair</option>
+                    <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
+                    <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
+                    <option value="67397ab9d2067a8cc64f7df5">Bed</option>
+                    <option value="673eeb15f80d6a76cf39967c">Others</option>
+                </select>
+
+                <label for="productBrand">Brand:</label>
+                <select id="productBrand" name="brand">
+                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
+                    <option value="67449f674fc73c80de04b2a7">ModernHome</option>
+                    <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
+                    <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
+                    <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
+                    <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
+                </select>
+                
+                <label for="productStock">Stock:</label>
+                <input type="number" id="productStock" name="stock">
+                
+                <label for="productImage">Image URL:</label>
+                <input type="text" id="productImage" name="imagePath">
+
+                {{!-- <label for="productImage">Upload Images:</label>
+                <input type="file" id="productImage" name="imageFiles" multiple accept="image/*"> --}}
+
+                <div class="button-group">
+                    <button type="submit">Add Product</button>
+                    <button type="button" id="closeDialog">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="dialog" id="updateProductDialog" style="display: none;">
+        <div class="dialog-content">
+            <h2>Edit Product</h2>
+            <form id="updateProductForm">
+                <input type="hidden" id="editProductId" name="id">
+                
+                <label for="editProductName">Name:</label>
+                <input type="text" id="editProductName" name="name" required>
+                
+                <label for="editProductPrice">Price:</label>
+                <input type="number" id="editProductPrice" name="price" required>
+                
+                <label for="editProductCategory">Category:</label>
+                <select id="editProductCategory" name="category">
+                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
+                    <option value="673978e6d2067a8cc64f7dee">Table</option>
+                    <option value="673978e6d2067a8cc64f7def">Mirror</option>
+                    <option value="673979c4d2067a8cc64f7df1">Chair</option>
+                    <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
+                    <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
+                    <option value="67397ab9d2067a8cc64f7df5">Bed</option>
+                    <option value="673eeb15f80d6a76cf39967c">Others</option>
+                </select>
+
+                <label for="editProductBrand">Brand:</label>
+                <select id="editProductBrand" name="brand">
+                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
+                    <option value="67449f674fc73c80de04b2a7">ModernHome</option>
+                    <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
+                    <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
+                    <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
+                    <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
+                </select>
+
+                <label for="editProductStock">Stock:</label>
+                <input type="number" id="editProductStock" name="stock">
+
+                <label for="editProductImage">Image URL:</label>
+                <input type="text" id="editProductImage" name="imagePath">
+
+                {{!-- <label for="editProductImage">Upload Images:</label>
+                <input type="file" id="editProductImage" name="imageFiles" multiple accept="image/*"> --}}
+
+                <div class="button-group">
+                    <button type="submit">Update Product</button>
+                    <button type="button" id="closeUpdateDialog">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</main>
+
+<script src="/script/products.js"></script> 
