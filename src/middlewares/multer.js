@@ -4,4 +4,4 @@ const multer = require("multer");
 const storage = multer.memoryStorage(); // Lưu file trong bộ nhớ RAM
 const upload = multer({ storage });
 
-module.exports.uploadAvatar = upload.single("imageFiles"); 
+module.exports.uploadAvatar = upload.array("imageFiles"); 

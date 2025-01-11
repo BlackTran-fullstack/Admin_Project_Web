@@ -41,7 +41,7 @@ class ProductsController {
 
     // [POST] /products/api
     createProduct(req, res, next) {
-        const { name, price, category, brand, stock, imagePath, slug } = req.body;
+        const { name, price, category, brand, stock, imagePath, extraImages, slug } = req.body;
 
         // Tạo đối tượng sản phẩm mới
         const newProduct = new Products({
@@ -51,6 +51,7 @@ class ProductsController {
             brandsId: new ObjectId(brand), // Use new ObjectId here
             stock,
             imagePath,
+            extraImages,
             slug,
         });
 
@@ -109,33 +110,41 @@ class ProductsController {
 
     // [POST] /products/upload-img
     async uploadImage(req, res, next) {
-        const file = req.file;
+        const files = req.files;
 
         // Kiểm tra xem file có tồn tại hay không
-        if (!file) {
-            return res.status(400).json({ error: "No file uploaded" });
+        if (!files || files.length === 0) {
+            return res.status(400).json({ error: "No files uploaded" });
         }
 
-        // Tạo tên tệp duy nhất (ví dụ dùng UUID hoặc timestamp)
-        const fileName = `${Date.now()}-${file.originalname}`;
-
         try {
-            // Upload file to Supabase
-            const { data, error } = await supabase.storage
-                .from('images')
-                .upload(`${fileName}`, file.buffer, {
-                    cacheControl: '3600', // 1 hour
-                    upsert: true,
-                });
+
+            // Mảng lưu URL các ảnh đã upload
+            const imageUrls = [];
+
+            // Upload ảnh lên Supabase
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileName = `${Date.now()}-${file.originalname}`;
+
+                // Upload file to Supabase
+                const { data, error } = await supabase.storage
+                    .from('images')
+                    .upload(`${fileName}`, file.buffer, {
+                        cacheControl: '3600', // 1 hour
+                        upsert: true,
+                    });
     
-            if (error) {
-                return res.status(500).json({ message: "Failed to upload image", error });
+                if (error) {
+                    return res.status(500).json({ message: "Failed to upload image", error });
+                }
+    
+                const imageUrl = `${supabaseUrl}/storage/v1/object/public/images/${fileName}`;
+                imageUrls.push(imageUrl);
             }
     
-            const imageUrl = `${supabaseUrl}/storage/v1/object/public/images/${fileName}`;
-    
             // Trả về URL của file đã upload
-            res.json({ url: imageUrl });
+            res.json({ imageUrls });
         } catch (error) {
             console.error("Error uploading image:", error);
             res.status(500).json({ message: "Failed to upload image", error });

@@ -78,19 +78,23 @@ document.getElementById("addProductForm").onsubmit = async function (e) {
     try {
         // Gửi dữ liệu lên server
         const response = await fetch("/products/upload-img", {
-            method: "POST",
+            method: "POST", 
             body: formData,
         });
 
         if (response.ok) {
             const data = await response.json();
+
+            const imageUrls = data.imageUrls;  // Lấy tất cả URL của các ảnh đã upload
+
             const productData = {
                 name: document.getElementById("productName").value,
                 price: price,
                 category: document.getElementById("productCategory").value,
                 brand: document.getElementById("productBrand").value,
                 stock: stock,
-                imagePath: data.url, // Lấy URL trả về từ server
+                imagePath: imageUrls[0], // Lấy URL trả về từ server
+                extraImages: imageUrls.slice(1), // Lấy các URL còn lại
                 slug: document.getElementById("productName").value.toLowerCase().replace(/ /g, "-"),
             };
 

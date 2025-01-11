@@ -17,7 +17,7 @@ router.delete("/api/:id", productsControllers.deleteProduct);
 
 router.put("/api/:id", productsControllers.updateProduct);
 
-router.post("/upload-img", uploadAvatar, productsControllers.uploadImage); 
+router.post("/upload-img", uploadAvatar, productsControllers.uploadImage);  
 
 router.get("/", productsControllers.getProducts);
 
