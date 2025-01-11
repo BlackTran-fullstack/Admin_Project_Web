@@ -10,6 +10,8 @@ class UsersControllers {
             .then((users) => {
                 res.render("accounts", {
                     users: mutipleMongooseToObject(users),
+                    currentUser: mongooseToObject(req.user),
+                    showNavbar: true,
                 });
             })
             .catch(next);
@@ -21,6 +23,54 @@ class UsersControllers {
             res.json(res.paginatedResults);
         } else {
             res.status(500).json({ message: "Pagination results not found" });
+        }
+    }
+
+    // [GET] /users/:id
+    getUser(req, res, next) {
+        Users.findById(req.params.id)
+            .then((user) => {
+                res.render("accountDetails", {
+                    user: mongooseToObject(user),
+                    showNavbar: true,
+                });
+            })
+            .catch(next);
+    }
+
+    // [POST] /users/:id/ban
+    async banUser(req, res, next) {
+        try {
+            const userId = req.params.id;
+            await Users.findByIdAndUpdate(userId, { isBanned: true });
+            res.status(200).json({
+                success: true,
+                message: "User banned successfully",
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                success: false,
+                errors: ["Internal Server Error"],
+            });
+        }
+    }
+
+    // [POST] /users/:id/unban
+    async unbanUser(req, res, next) {
+        try {
+            const userId = req.params.id;
+            await Users.findByIdAndUpdate(userId, { isBanned: false });
+            res.status(200).json({
+                success: true,
+                message: "User banned successfully",
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                success: false,
+                errors: ["Internal Server Error"],
+            });
         }
     }
 }

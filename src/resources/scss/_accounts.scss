@@ -1,10 +1,17 @@
 #accounts {
     width: 100%;
+    height: calc(100vh - 32px);
 }
 
 #accounts .container .header-page {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+#accounts .container .header-page .actions {
+    display: flex;
+    gap: 15px;
     align-items: center;
 }
 
@@ -37,6 +44,8 @@
     left: 0;
     top: 0;
 
+    font-size: 1.4rem;
+
     color: #000;
 }
 
@@ -45,7 +54,61 @@
 }
 
 #accounts .container .header-page .search input::placeholder {
+    font-size: 1.4rem;
     color: #000;
+}
+
+#accounts .container .header-page .filter {
+    position: relative;
+    width: fit-content;
+}
+
+#accounts .container .header-page .filter .select {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    height: 35px;
+    padding: 0 1.5rem;
+    border: 1px solid #e8e8e8;
+    border-radius: 12px;
+}
+
+#accounts .container .header-page .filter .select .selected {
+    font-size: 1.4rem;
+    color: #000;
+}
+
+#accounts .container .header-page .filter .dropdown-list {
+    position: absolute;
+    top: 40px;
+    right: 1.5rem;
+
+    width: 9rem;
+    max-height: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+#accounts .container .header-page .filter .dropdown-list.show {
+    max-height: 200px;
+}
+
+#accounts .container .header-page .filter .select i.rotate {
+    transform: rotate(180deg);
+}
+
+#accounts .container .header-page .filter .dropdown-list .dropdown-item {
+    padding: 0.8rem 0rem 0.8rem 1rem;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+#accounts .container .header-page .filter .dropdown-list .dropdown-item:hover {
+    background: #f9f9f9;
 }
 
 #accounts .container .header-page .title {
@@ -102,19 +165,36 @@
     object-fit: cover;
 }
 
-#accounts .content-page .table tbody .btn-ban {
-    background-color: #f44336;
+#accounts .content-page .table tbody .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    width: 80px;
+    height: 35px;
+
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
 
     font-size: 1.4rem;
     font-weight: 600;
-    text-transform: uppercase;
 
     cursor: pointer;
     transition: 0.3s ease;
+}
+
+#accounts .content-page .table tbody .btn-unban {
+    background: #34c759;
+}
+
+#accounts .content-page .table tbody .btn-unban:hover {
+    background: #4ba962;
+}
+
+#accounts .content-page .table tbody .btn-ban {
+    background: #f44336;
 }
 
 #accounts .content-page .table tbody .btn-ban:hover {

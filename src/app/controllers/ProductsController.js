@@ -17,7 +17,8 @@ class ProductsController {
             .populate("brandsId", "name")
             .then((products) => {
                 res.render("products", {
-                    products
+                    products,
+                    showNavbar: true,
                 });
             })
             .catch(next);
@@ -51,18 +52,23 @@ class ProductsController {
             .save()
             .then((savedProduct) => {
                 // Populate the category and return the saved product
-                return savedProduct.populate("categoriesId", "name").then((populatedProduct) => {
-                    res.status(201).json(populatedProduct); // Return the populated product
-                });
+                return savedProduct
+                    .populate("categoriesId", "name")
+                    .then((populatedProduct) => {
+                        res.status(201).json(populatedProduct); // Return the populated product
+                    });
             })
             .catch((error) => {
                 console.error("Error saving product:", error);
-                res.status(500).json({ message: "Failed to save product", error });
+                res.status(500).json({
+                    message: "Failed to save product",
+                    error,
+                });
             });
     }
 
     // [DELETE] /products/api/:id
-    deleteProduct(req, res, next) { 
+    deleteProduct(req, res, next) {
         const { id } = req.params;
 
         Products.findByIdAndDelete(id)
@@ -75,7 +81,10 @@ class ProductsController {
             })
             .catch((error) => {
                 console.error("Error deleting product:", error);
-                res.status(500).json({ message: "Failed to delete product", error });
+                res.status(500).json({
+                    message: "Failed to delete product",
+                    error,
+                });
             });
     }
 
@@ -84,7 +93,18 @@ class ProductsController {
         const { id } = req.params;
         const { name, price, category, brand, stock, imagePath } = req.body;
 
-        Products.findByIdAndUpdate(id, { name, price, categoriesId: category, brandsId: brand, stock, imagePath }, { new: true })
+        Products.findByIdAndUpdate(
+            id,
+            {
+                name,
+                price,
+                categoriesId: category,
+                brandsId: brand,
+                stock,
+                imagePath,
+            },
+            { new: true }
+        )
             .then((updatedProduct) => {
                 if (updatedProduct) {
                     res.json(updatedProduct);
@@ -94,11 +114,12 @@ class ProductsController {
             })
             .catch((error) => {
                 console.error("Error updating product:", error);
-                res.status(500).json({ message: "Failed to update product", error });
+                res.status(500).json({
+                    message: "Failed to update product",
+                    error,
+                });
             });
-
     }
-
 }
 
-module.exports = new ProductsController(); 
+module.exports = new ProductsController();

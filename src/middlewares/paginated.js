@@ -4,8 +4,8 @@ function paginatedResults(model) {
         console.log("model.modelName: ", model.modelName);
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
-        const sortBy = req.query.sortBy || "_id";
-        const order = req.query.order === "desc" ? -1 : 1; 
+        const sortBy = req.query.sortBy || "createdAt";
+        const order = req.query.order === "desc" ? -1 : 1;
 
         const search = req.query.search || "";
 
@@ -20,15 +20,17 @@ function paginatedResults(model) {
 
         const searchFields = req.query.fields 
             ? req.query.fields.split(",")
-            : ["name", "email"];  // Default fields
+            : ["firstName", "lastName", "email"];
 
-        const query = searchFields.length 
-            ? {
-                  $or: searchFields.map((field) => ({
-                      [field]: { $regex: search, $options: "i" },
-                  })),
-              }
-            : {};
+        const keywords = search.split(" ").filter((word) => word.trim() !== "");
+
+        const query = {
+            $and: keywords.map((keyword) => ({
+                $or: searchFields.map((field) => ({
+                    [field]: { $regex: keyword, $options: "i" },
+                })),
+            })),
+        };
 
 
         // Thêm điều kiện lọc Category và Brand nếu có
