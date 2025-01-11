@@ -56,6 +56,35 @@ document.getElementById("closeUpdateDialog").onclick = function () {
     document.getElementById("updateProductDialog").style.display = "none";
 };
 
+// Add this function to handle file selection and preview
+function handleFileSelect(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    previewContainer.innerHTML = ''; // Clear existing previews
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                previewContainer.appendChild(img);
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Display file count
+    const fileCount = document.createElement('p');
+    fileCount.textContent = `${files.length} file(s) selected`;
+    fileCount.className = 'file-count';
+    previewContainer.appendChild(fileCount);
+}
+
 document.getElementById("addProductForm").onsubmit = async function (e) {
     e.preventDefault(); // Ngăn reload trang
 
@@ -112,6 +141,7 @@ document.getElementById("addProductForm").onsubmit = async function (e) {
                 addProductToTable(newProduct);
                 document.getElementById("addProductDialog").style.display = "none";
                 document.getElementById("addProductForm").reset();
+                document.getElementById('imagePreviewContainer').innerHTML = ''; // Clear image previews
             } else {
                 alert("Failed to add product to MongoDB");
             }
@@ -122,6 +152,46 @@ document.getElementById("addProductForm").onsubmit = async function (e) {
         console.error("Error:", error);
     }
 };
+
+// Add this event listener to the file input
+document.getElementById('productImage').addEventListener('change', handleFileSelect);
+
+
+// Add this function to handle file selection and preview for the edit form
+function handleEditFileSelect(event) {
+    const files = event.target.files;
+    const previewContainer = document.getElementById('editImagePreviewContainer');
+    
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'image-preview';
+                
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'x';
+                deleteBtn.className = 'delete-image';
+                deleteBtn.onclick = function() {
+                    imgContainer.remove();
+                };
+                
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(deleteBtn);
+                previewContainer.appendChild(imgContainer);
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    }
+}
+
 
 // Hàm xử lý sự kiện xóa sản phẩm
 document.querySelector(".table").addEventListener("click", async (e) => {
@@ -163,7 +233,9 @@ document.querySelector(".table").addEventListener("click", async (e) => {
         const brand = row.querySelector(".brand").textContent.trim();
         const price = row.querySelector(".price").textContent.trim();
         const stock = row.querySelector(".role").textContent.trim();
-        const imagePath = row.querySelector("img").src;
+        //const imagePath = row.querySelector("img").src;
+        const imgElement = row.querySelector("img").src;
+        const imagePath = imgElement ==="http://localhost:3000/products" ? null : imgElement;
 
         // Điền thông tin vào form dialog
         document.getElementById("editProductId").value = productId;
@@ -172,7 +244,8 @@ document.querySelector(".table").addEventListener("click", async (e) => {
         //document.getElementById("editProductBrand").value = brand;
         document.getElementById("editProductPrice").value = price;
         document.getElementById("editProductStock").value = stock;
-        document.getElementById("editProductImage").value = imagePath;
+        
+        //document.getElementById("editProductImage").value = imagePath;
 
         // So khớp giá trị với các option của category và brand
         const categorySelect = document.getElementById("editProductCategory");
@@ -186,6 +259,65 @@ document.querySelector(".table").addEventListener("click", async (e) => {
         Array.from(brandSelect.options).forEach(option => {
             option.selected = option.textContent.trim() === brand;
         });
+
+        // Clear existing previews
+        const previewContainer = document.getElementById('editImagePreviewContainer');
+        previewContainer.innerHTML = '';
+
+        // Add preview for the main image
+        const mainImgContainer = document.createElement('div');
+        mainImgContainer.className = 'image-preview';
+        
+        console.log(imagePath);
+
+        if(imagePath){
+
+            const mainImg = document.createElement('img');
+            mainImg.src = imagePath;
+            mainImg.className = 'preview-image';
+            
+            const deleteMainBtn = document.createElement('button');
+            deleteMainBtn.textContent = 'x';
+            deleteMainBtn.className = 'delete-image';
+            deleteMainBtn.onclick = function() {
+                mainImgContainer.remove();
+            };
+            
+            mainImgContainer.appendChild(mainImg);
+            mainImgContainer.appendChild(deleteMainBtn);
+            previewContainer.appendChild(mainImgContainer);
+        }
+        
+        // Fetch and display extra images
+        try {
+            const response = await fetch(`/products/api/${productId}`);
+            if (response.ok) {
+                const productData = await response.json();
+                if (productData.extraImages && productData.extraImages.length > 0) {
+                    productData.extraImages.forEach(imgUrl => {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'image-preview';
+                        
+                        const img = document.createElement('img');
+                        img.src = imgUrl;
+                        img.className = 'preview-image';
+                        
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.textContent = 'x';
+                        deleteBtn.className = 'delete-image';
+                        deleteBtn.onclick = function() {
+                            imgContainer.remove();
+                        };
+                        
+                        imgContainer.appendChild(img);
+                        imgContainer.appendChild(deleteBtn);
+                        previewContainer.appendChild(imgContainer);
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching extra images:", error);
+        }
 
         // Hiển thị dialog
         document.getElementById("updateProductDialog").style.display = "flex";
@@ -203,11 +335,11 @@ document.getElementById("updateProductForm").onsubmit = async function (e) {
         category: document.getElementById("editProductCategory").value,
         brand: document.getElementById("editProductBrand").value,
         stock: parseInt(document.getElementById("editProductStock").value),
-        imagePath: document.getElementById("editProductImage").value,
+        //imagePath: document.getElementById("editProductImage").value,
     };
 
      // Kiểm tra điều kiện price và stock phải là số
-     if (isNaN(productData.price) || productData.price <= 0) {
+    if (isNaN(productData.price) || productData.price <= 0) {
         alert("Price must be a valid number greater than 0.");
         return; // Ngừng thực hiện nếu giá không hợp lệ
     }
@@ -218,6 +350,24 @@ document.getElementById("updateProductForm").onsubmit = async function (e) {
     }
 
     const productId = document.getElementById("editProductId").value;
+
+    // Collect all remaining image URLs
+    const imageElements = document.querySelectorAll('#editImagePreviewContainer .preview-image');
+    const imageUrls = Array.from(imageElements).map(img => img.src);
+
+    console.log(imageUrls);
+
+    if (imageUrls.length > 0) {
+        console.log("Setting image path");
+        productData.imagePath = imageUrls[0]; // First image is the main image
+        productData.extraImages = imageUrls.slice(1); // Rest are extra images
+    } else {
+        // Handle case where all images are deleted
+        productData.imagePath = '';
+        productData.extraImages = [];
+    }
+
+    console.log(productData);
 
     try {
         // Gửi dữ liệu đến server qua API

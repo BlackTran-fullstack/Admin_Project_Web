@@ -11,6 +11,8 @@ const { uploadAvatar } = require("../middlewares/multer");
 
 router.get("/api", paginatedResults(products), productsControllers.getPaginatedProducts);
 
+router.get("/api/:id", productsControllers.getProduct);
+
 router.post("/api", productsControllers.createProduct);
 
 router.delete("/api/:id", productsControllers.deleteProduct);

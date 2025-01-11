@@ -146,6 +146,7 @@
 
                 <label for="productImage">Upload Images:</label>
                 <input type="file" id="productImage" name="imageFiles" accept="image/*" multiple>
+                <div id="imagePreviewContainer" class="image-preview-container"></div>
 
                 <div class="button-group">
                     <button type="submit">Add Product</button>
@@ -193,8 +194,11 @@
                 <label for="editProductStock">Stock:</label>
                 <input type="number" id="editProductStock" name="stock">
 
-                <label for="editProductImage">Image URL:</label>
-                <input type="text" id="editProductImage" name="imagePath">
+                <label for="editProductImage">Images:</label>
+                <div id="editImagePreviewContainer" class="image-preview-container"></div>
+
+                <label for="editProductImage">Add Images:</label>
+                <input type="file" id="editProductImage" name="imageFiles" multiple accept="image/*">
 
                 {{!-- <label for="editProductImage">Upload Images:</label>
                 <input type="file" id="editProductImage" name="imageFiles" multiple accept="image/*"> --}}

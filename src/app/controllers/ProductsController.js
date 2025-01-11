@@ -39,6 +39,28 @@ class ProductsController {
         }
     }
 
+    // [GET] /products/api/:id
+    getProduct(req, res, next) {
+        const { id } = req.params;
+
+        console.log("Vao getProduct");
+
+        Products.findById(id)
+            .populate("categoriesId", "name")
+            .populate("brandsId", "name")
+            .then((product) => {
+                if (product) {
+                    res.json(product);
+                } else {
+                    res.status(404).json({ message: "Product not found" });
+                }
+            })
+            .catch((error) => {
+                console.error("Error getting product:", error);
+                res.status(500).json({ message: "Failed to get product", error });
+            });
+    }
+
     // [POST] /products/api
     createProduct(req, res, next) {
         const { name, price, category, brand, stock, imagePath, extraImages, slug } = req.body;
@@ -90,10 +112,13 @@ class ProductsController {
 
     // [PUT] /products/api/:id
     updateProduct(req, res, next) {
-        const { id } = req.params;
-        const { name, price, category, brand, stock, imagePath } = req.body;
 
-        Products.findByIdAndUpdate(id, { name, price, categoriesId: category, brandsId: brand, stock, imagePath }, { new: true })
+        console.log("Vao updateProduct");
+
+        const { id } = req.params;
+        const { name, price, category, brand, stock, imagePath, extraImages } = req.body;
+
+        Products.findByIdAndUpdate(id, { name, price, categoriesId: category, brandsId: brand, stock, imagePath, extraImages }, { new: true })
             .then((updatedProduct) => {
                 if (updatedProduct) {
                     res.json(updatedProduct);
