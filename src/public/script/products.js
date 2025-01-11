@@ -59,54 +59,63 @@ document.getElementById("closeUpdateDialog").onclick = function () {
 document.getElementById("addProductForm").onsubmit = async function (e) {
     e.preventDefault(); // Ngăn reload trang
 
-    // Thu thập thông tin từ form
-    const productData = {
-        name: document.getElementById("productName").value,
-        price: parseFloat(document.getElementById("productPrice").value),
-        category: document.getElementById("productCategory").value,
-        brand: document.getElementById("productBrand").value,
-        stock: parseInt(document.getElementById("productStock").value),
-        imagePath: document.getElementById("productImage").value,
-        //imagePath: document.getElementById("productImage").files,
-    };
+    const formData = new FormData(document.getElementById("addProductForm"));
 
-     // Kiểm tra điều kiện price và stock phải là số
-     if (isNaN(productData.price) || productData.price <= 0) {
+    // Kiểm tra điều kiện price và stock phải là số
+    const price = parseFloat(document.getElementById("productPrice").value);
+    const stock = parseInt(document.getElementById("productStock").value);
+
+    if (isNaN(price) || price <= 0) {
         alert("Price must be a valid number greater than 0.");
-        return; // Ngừng thực hiện nếu giá không hợp lệ
+        return;
     }
 
-    if (isNaN(productData.stock) || productData.stock < 0) {
+    if (isNaN(stock) || stock < 0) {
         alert("Stock must be a valid non-negative number.");
-        return; // Ngừng thực hiện nếu số lượng không hợp lệ
+        return;
     }
 
     try {
-        // Gửi dữ liệu đến server qua API
-        const response = await fetch("/products/api", {
+        // Gửi dữ liệu lên server
+        const response = await fetch("/products/upload-img", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(productData),
+            body: formData,
         });
 
         if (response.ok) {
-            const newProduct = await response.json();
+            const data = await response.json();
+            const productData = {
+                name: document.getElementById("productName").value,
+                price: price,
+                category: document.getElementById("productCategory").value,
+                brand: document.getElementById("productBrand").value,
+                stock: stock,
+                imagePath: data.url, // Lấy URL trả về từ server
+                slug: document.getElementById("productName").value.toLowerCase().replace(/ /g, "-"),
+            };
 
-            // Thêm sản phẩm mới vào bảng hiển thị
-            addProductToTable(newProduct);
+            // Gửi dữ liệu sản phẩm về MongoDB
+            const mongoResponse = await fetch("/products/api", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(productData),
+            });
 
-            // Đóng dialog
-            document.getElementById("addProductDialog").style.display = "none";
-
-            // Reset form
-            document.getElementById("addProductForm").reset();
+            if (mongoResponse.ok) {
+                const newProduct = await mongoResponse.json();
+                addProductToTable(newProduct);
+                document.getElementById("addProductDialog").style.display = "none";
+                document.getElementById("addProductForm").reset();
+            } else {
+                alert("Failed to add product to MongoDB");
+            }
         } else {
-            alert("Failed to add product");
+            alert("Failed to upload image");
         }
     } catch (error) {
-        console.error("Error adding product:", error);
+        console.error("Error:", error);
     }
 };
 

@@ -5,7 +5,7 @@ function paginatedResults(model) {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
         const sortBy = req.query.sortBy || "_id";
-        const order = req.query.order === "desc" ? -1 : 1; 
+        const order = req.query.order === "desc" ? -1 : 1;  
 
         const search = req.query.search || "";
 

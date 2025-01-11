@@ -4,6 +4,13 @@ const Products = require("../models/Products");
 const Categories = require("../models/Categories");
 const Brands = require("../models/Brands");
 
+const { createClient } = require("@supabase/supabase-js");
+
+// Cấu hình Supabase
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 const { mutipleMongooseToObject } = require("../../util/mongoose");
 const { mongooseToObject } = require("../../util/mongoose");
 
@@ -34,7 +41,7 @@ class ProductsController {
 
     // [POST] /products/api
     createProduct(req, res, next) {
-        const { name, price, category, brand, stock, imagePath } = req.body;
+        const { name, price, category, brand, stock, imagePath, slug } = req.body;
 
         // Tạo đối tượng sản phẩm mới
         const newProduct = new Products({
@@ -44,6 +51,7 @@ class ProductsController {
             brandsId: new ObjectId(brand), // Use new ObjectId here
             stock,
             imagePath,
+            slug,
         });
 
         // Lưu sản phẩm vào MongoDB
@@ -97,6 +105,41 @@ class ProductsController {
                 res.status(500).json({ message: "Failed to update product", error });
             });
 
+    }
+
+    // [POST] /products/upload-img
+    async uploadImage(req, res, next) {
+        const file = req.file;
+
+        // Kiểm tra xem file có tồn tại hay không
+        if (!file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+
+        // Tạo tên tệp duy nhất (ví dụ dùng UUID hoặc timestamp)
+        const fileName = `${Date.now()}-${file.originalname}`;
+
+        try {
+            // Upload file to Supabase
+            const { data, error } = await supabase.storage
+                .from('images')
+                .upload(`${fileName}`, file.buffer, {
+                    cacheControl: '3600', // 1 hour
+                    upsert: true,
+                });
+    
+            if (error) {
+                return res.status(500).json({ message: "Failed to upload image", error });
+            }
+    
+            const imageUrl = `${supabaseUrl}/storage/v1/object/public/images/${fileName}`;
+    
+            // Trả về URL của file đã upload
+            res.json({ url: imageUrl });
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            res.status(500).json({ message: "Failed to upload image", error });
+        }
     }
 
 }

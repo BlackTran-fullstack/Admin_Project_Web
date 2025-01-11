@@ -108,7 +108,7 @@
     <div id="addProductDialog" class="dialog" style="display: none;">
         <div class="dialog-content">
             <h2>Add New Product</h2>
-            <form id="addProductForm">
+            <form id="addProductForm" action="/products/upload-img" method="POST" enctype="multipart/form-data">
                 <label for="productName">Name:</label>
                 <input type="text" id="productName" name="name" required>
                 
@@ -135,17 +135,17 @@
                     <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
                     <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
                     <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
-                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option> 
                 </select>
                 
                 <label for="productStock">Stock:</label>
                 <input type="number" id="productStock" name="stock">
                 
-                <label for="productImage">Image URL:</label>
-                <input type="text" id="productImage" name="imagePath">
+                {{!-- <label for="productImage">Image URL:</label>
+                <input type="text" id="productImage" name="imagePath"> --}}
 
-                {{!-- <label for="productImage">Upload Images:</label>
-                <input type="file" id="productImage" name="imageFiles" multiple accept="image/*"> --}}
+                <label for="productImage">Upload Images:</label>
+                <input type="file" id="productImage" name="imageFiles" accept="image/*">
 
                 <div class="button-group">
                     <button type="submit">Add Product</button>
