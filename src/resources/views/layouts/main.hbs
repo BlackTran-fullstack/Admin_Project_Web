@@ -25,7 +25,9 @@
         />
     </head>
     <body>
-        {{> navbar}}
+        {{#if showNavbar}}
+            {{> navbar}}
+        {{/if}}
 
         {{{body}}}
     </body>

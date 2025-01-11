@@ -32,3 +32,19 @@ window.addEventListener("resize", () => {
         toggleMenu(sidebar.classList.contains("menu-active"));
     }
 });
+
+document.getElementById("logoutLink").addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    try {
+        const res = await fetch("/logout", {
+            method: "POST",
+        });
+
+        if (res.ok) {
+            window.location.href = "/login";
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});

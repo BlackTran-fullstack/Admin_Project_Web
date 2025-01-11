@@ -1,0 +1,55 @@
+<main id="login">
+    <div class="login-body">
+        <div class="login-container">
+            <h2 class="sub-title">Login</h2>
+
+            <div class="notification">
+                <i class="fa-solid fa-check"></i>
+                <p class="notification-text"></p>
+            </div>
+
+            <p class="title-form">Insert your account information:</p>
+
+            <form id="login-form" action="/login" method="post">
+                <div class="input-group form-email">
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    />
+
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+
+                <div class="input-group form-password">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                    />
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <div class="hide_show_password">
+                        <div class="hide">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="/forgot-password" class="forgot_pw">Forgot password?</a>
+
+                <button class="button login-btn" type="submit">LOGIN NOW</button>
+            </form>
+
+            <p class="login-register">Don't have an account?
+                <a href="/register" class="register-link">Register Here</a></p>
+        </div>
+    </div>
+</main>
+
+<script src="/script/login.js"></script>

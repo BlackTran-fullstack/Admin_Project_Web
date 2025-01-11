@@ -26,5 +26,32 @@ a {
     text-decoration: none;
 }
 
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input {
+    border: none;
+}
+
+button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
 @import "navbar";
 @import "accounts";
+@import "accountDetails";
+@import "login";
+@import "register";
+@import "profile";
+@import "forgotPassword";
+@import "resetCode";
+@import "newPassword";

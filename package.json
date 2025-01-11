@@ -19,11 +19,16 @@
     "homepage": "https://github.com/BlackTran-fullstack/Admin_Project_Web#readme",
     "description": "",
     "dependencies": {
+        "bcrypt": "^5.1.1",
         "express": "^4.21.2",
         "express-flash": "^0.0.2",
         "express-handlebars": "^8.0.1",
         "express-session": "^1.18.1",
-        "mongoose": "^8.9.3"
+        "mongoose": "^8.9.3",
+        "nodemailer": "^6.9.16",
+        "passport": "^0.7.0",
+        "passport-local": "^1.0.0",
+        "uuid": "^11.0.5"
     },
     "devDependencies": {
         "dotenv": "^16.4.7",

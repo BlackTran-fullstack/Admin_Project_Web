@@ -1,4 +1,7 @@
 const path = require("path");
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
 const express = require("express");
 const morgan = require("morgan");
 const { engine } = require("express-handlebars");
@@ -9,6 +12,7 @@ const route = require("./routes");
 const db = require("./config/db");
 const flash = require("express-flash");
 const session = require("express-session");
+const passport = require("passport");
 
 const handlebars = require("handlebars");
 
@@ -25,7 +29,29 @@ handlebars.registerHelper("reduce", function (array, options) {
 
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use(flash());
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+);
+
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: false }));
+
+app.use(flash());
+
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+    })
+);
+
+app.use(passport.initialize());
+
+app.use(passport.session());
 
 // HTTP logger
 app.use(morgan("combined"));

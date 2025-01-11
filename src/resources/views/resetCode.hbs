@@ -1,0 +1,35 @@
+<main id="reset-code">
+    <div class="reset-code-body">
+        <div class="reset-code-container">
+            <h2 class="sub-title">Code Verification</h2>
+
+            <form id="reset-code-form">
+                <div class="group form-code-verification">
+                    <div class="input-group">
+                        <input
+                            type="number"
+                            id="code-verification"
+                            name="code-verification"
+                            placeholder="Enter code"
+                            required
+                        />
+
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+
+                    <span class="error code-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <p class="error-text"></p>
+                    </span>
+                </div>
+
+                <button
+                    class="button reset-code-btn"
+                    type="submit"
+                >SUBMIT</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script src="/script/resetCode.js"></script>

@@ -1,0 +1,88 @@
+<main id="register">
+    <div class="register-body">
+        <div class="register-container">
+            <h2 class="sub-title">Create an account</h2>
+
+            <form id="register-form">
+                <div class="group form-email">
+                    <div class="input-group">
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            required
+                        />
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        <span class="form-message"></span>
+                    </div>
+
+                    <span class="error email-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <p class="error-text">Please enter a valid email.</p>
+                    </span>
+                </div>
+
+                <div class="group form-password">
+                    <div class="input-group">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create password"
+                            required
+                        />
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <div class="hide_show_password">
+                            <div class="hide">
+                                <i class="fa-solid fa-eye-slash"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="error password-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <p class="error-text">Please enter at least 8 character
+                            with number, symbol, small and capital letter.</p>
+                    </span>
+                </div>
+
+                <div class="group form-confirm-password">
+                    <div class="input-group">
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Confirm password"
+                            required
+                        />
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        <div class="hide_show_password">
+                            <div class="hide">
+                                <i class="fa-solid fa-eye-slash"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="error cPassword-error">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <p class="error-text">Password don't match.</p>
+                    </span>
+                </div>
+
+                <button class="button register-btn" type="submit">REGISTER NOW</button>
+            </form>
+
+            <p class="register-login">Already have an account?
+                <a href="/login" class="login-link">Login Here</a></p>
+        </div>
+    </div>
+</main>
+
+<script src="/script/register.js"></script>

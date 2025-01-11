@@ -1,0 +1,146 @@
+#reset-code {
+    margin-left: 0;
+    padding: 0;
+}
+
+#reset-code .reset-code-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100vw;
+    height: 100vh;
+}
+
+#reset-code .reset-code-body .reset-code-container {
+    width: 30%;
+}
+
+#reset-code .reset-code-container .sub-title {
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e5e8;
+
+    font-weight: 700;
+
+    position: relative;
+}
+
+#reset-code .reset-code-container .sub-title::after {
+    content: "";
+
+    display: block;
+
+    width: 40%;
+    height: 1.5px;
+    background: #b88e2f;
+
+    position: absolute;
+    bottom: -1px;
+}
+
+#reset-code .reset-code-container .title-form {
+    margin-top: 15px;
+
+    font-size: 1.3rem;
+}
+
+#reset-code .reset-code-container #reset-code-form {
+    margin-top: 15px;
+}
+
+#reset-code #reset-code-form .group {
+    width: 100%;
+}
+
+#reset-code #reset-code-form .input-group {
+    width: 100%;
+    position: relative;
+}
+
+#reset-code #reset-code-form .fa-code {
+    font-size: 2rem;
+
+    color: #cbcbcb;
+
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 13px;
+}
+
+#reset-code #reset-code-form input {
+    width: 100%;
+    padding: 25px 0;
+    padding-left: 70px;
+    border: 1px solid #9f9f9f;
+
+    border-radius: 10px;
+    outline: none;
+
+    font-size: 1.6rem;
+    font-weight: 400;
+
+    color: #9f9f9f;
+    background: #fff;
+
+    transition: all 0.2s ease;
+}
+
+#reset-code #reset-code-form .invalid input {
+    border-color: #d93025;
+}
+
+#reset-code #reset-code-form input:focus {
+    border-color: #b88e2f;
+}
+
+#reset-code #reset-code-form input:focus ~ .fa-code {
+    color: #b88e2f;
+}
+
+#reset-code #reset-code-form .error {
+    display: flex;
+    align-items: baseline;
+
+    margin-top: 6px;
+
+    font-size: 1.3rem;
+
+    color: #d93025;
+
+    display: none;
+}
+
+#reset-code #reset-code-form .invalid .error {
+    display: flex;
+}
+
+#reset-code #reset-code-form .error .fa-circle-exclamation {
+    margin-right: 6px;
+    font-size: 1.5rem;
+}
+
+#reset-code #reset-code-form .error .error-text {
+    line-height: 1.5;
+}
+
+#reset-code .reset-code-container .reset-code-btn {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #b88e2f;
+    margin: 30px auto 0;
+
+    border-radius: 5px;
+
+    font-weight: 700;
+
+    color: #fff;
+    background: #b88e2f;
+
+    transition: 0.5s ease;
+}
+
+#reset-code .reset-code-container .reset-code-btn:hover {
+    color: #b88e2f;
+    background: #fff;
+}

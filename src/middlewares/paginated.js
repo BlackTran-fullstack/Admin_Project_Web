@@ -2,21 +2,23 @@ function paginatedResults(model) {
     return async (req, res, next) => {
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
-        const sortBy = req.query.sortBy || "_id";
+        const sortBy = req.query.sortBy || "createdAt";
         const order = req.query.order === "desc" ? -1 : 1;
 
         const search = req.query.search || "";
         const searchFields = req.query.fields
             ? req.query.fields.split(",")
-            : ["name", "email"];
+            : ["firstName", "lastName", "email"];
 
-        const query = searchFields.length
-            ? {
-                  $or: searchFields.map((field) => ({
-                      [field]: { $regex: search, $options: "i" },
-                  })),
-              }
-            : {};
+        const keywords = search.split(" ").filter((word) => word.trim() !== "");
+
+        const query = {
+            $and: keywords.map((keyword) => ({
+                $or: searchFields.map((field) => ({
+                    [field]: { $regex: keyword, $options: "i" },
+                })),
+            })),
+        };
 
         try {
             const totalDocuments = await model.countDocuments(query).exec();

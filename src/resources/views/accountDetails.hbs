@@ -1,0 +1,49 @@
+<main id="accountDetails">
+    <div class="container">
+        <div class="header-page">
+            <h1 class="title">Account Details</h1>
+        </div>
+
+        <div class="content-page">
+            <img src="{{user.avatar}}" alt="Avatar" class="account-avatar" />
+
+            <div class="account-info">
+                <div class="info account-name">
+                    <div class="first-name">
+                        <label>First Name</label>
+                        <input
+                            type="text"
+                            value="{{user.firstName}}"
+                            readonly
+                        />
+                    </div>
+
+                    <div class="last-name">
+                        <label>Last Name</label>
+                        <input type="text" value="{{user.lastName}}" readonly />
+                    </div>
+                </div>
+
+                <div class="info account-email">
+                    <label>Email</label>
+                    <input type="email" value="{{user.email}}" readonly />
+                </div>
+
+                <div class="info account-phone">
+                    <label>Phone</label>
+                    <input type="tel" value="{{user.phone}}" readonly />
+                </div>
+
+                <div class="info account-address">
+                    <label>Address</label>
+                    <input type="text" value="{{user.address}}" readonly />
+                </div>
+
+                <div class="info account-city">
+                    <label>City</label>
+                    <input type="text" value="{{user.city}}" readonly />
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
