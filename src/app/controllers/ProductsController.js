@@ -17,6 +17,25 @@ const { mongooseToObject } = require("../../util/mongoose");
 const ObjectId = mongoose.Types.ObjectId; // Add this line to fix the error
 
 class ProductsController {
+
+    // [GET] /products/categories
+    getCategories(req, res, next) {
+        Categories.find({})
+            .then((categories) => {
+                res.json(categories);
+            })
+            .catch(next);
+    }
+
+    // [GET] /products/brands
+    getBrands(req, res, next) {
+        Brands.find({})
+            .then((brands) => {
+                res.json(brands);
+            })
+            .catch(next);
+    }
+
     // [GET] /products
     getProducts(req, res, next) {
         Products.find({})
@@ -135,7 +154,7 @@ class ProductsController {
 
     // [POST] /products/upload-img
     async uploadImage(req, res, next) {
-        const files = req.files;
+        const files = req.files; 
 
         // Kiểm tra xem file có tồn tại hay không
         if (!files || files.length === 0) {

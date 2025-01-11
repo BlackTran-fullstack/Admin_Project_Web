@@ -8,6 +8,59 @@ let currentFilter = "";
 let currentBrand = "";
 let currentCategory = "";
 
+// Hàm để lấy và hiển thị danh sách categories
+async function fetchCategories() {
+    try {
+        const response = await fetch('products/categories');
+        const categories = await response.json();
+        const categorySelect = document.getElementById('category');
+        const productCategory = document.getElementById('productCategory');
+        const editProductCategory = document.getElementById('editProductCategory');
+        
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category._id; // Hoặc category._id tùy vào trường trong MongoDB
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+            productCategory.appendChild(option.cloneNode(true));
+            editProductCategory.appendChild(option.cloneNode(true));
+        });
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+    }
+}
+
+// Hàm để lấy và hiển thị danh sách brands
+async function fetchBrands() {
+    try {
+        const response = await fetch('products/brands');
+        const brands = await response.json();
+        const brandSelect = document.getElementById('brand');
+        const productBrand = document.getElementById('productBrand');
+        const editProductBrand = document.getElementById('editProductBrand');
+
+        console.log(brands);
+        
+        brands.forEach(brand => {
+            const option = document.createElement('option');
+            option.value = brand._id; // Hoặc brand._id tùy vào trường trong MongoDB
+            option.textContent = brand.name;
+            brandSelect.appendChild(option);
+            productBrand.appendChild(option.cloneNode(true));
+            editProductBrand.appendChild(option.cloneNode(true));
+        });
+    } catch (error) {
+        console.error('Error fetching brands:', error);
+    }
+}
+
+// Gọi các hàm khi trang tải xong
+document.addEventListener('DOMContentLoaded', () => {
+    fetchCategories();
+    fetchBrands();
+});
+
+
 // Input search
 document.querySelector(".input-search").addEventListener("input", () => {
     currentSearch = document.querySelector(".input-search").value;
@@ -58,7 +111,7 @@ document.getElementById("closeUpdateDialog").onclick = function () {
 
 // Add this function to handle file selection and preview
 function handleFileSelect(event) {
-    const files = event.target.files;
+    const files = event.target.files; 
     const previewContainer = document.getElementById('imagePreviewContainer');
     previewContainer.innerHTML = ''; // Clear existing previews
 
@@ -85,8 +138,37 @@ function handleFileSelect(event) {
     previewContainer.appendChild(fileCount);
 }
 
+// Add this function to handle file selection and preview
+function handleEditFileSelect(event) {
+    const files = event.target.files; 
+    const previewContainer = document.getElementById('EditPreviewContainer');
+    previewContainer.innerHTML = ''; // Clear existing previews
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                previewContainer.appendChild(img);
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Display file count
+    const fileCount = document.createElement('p');
+    fileCount.textContent = `${files.length} file(s) selected`;
+    fileCount.className = 'file-count';
+    previewContainer.appendChild(fileCount);
+}
+
 document.getElementById("addProductForm").onsubmit = async function (e) {
-    e.preventDefault(); // Ngăn reload trang
+    e.preventDefault(); // Ngăn reload trang 
 
     const formData = new FormData(document.getElementById("addProductForm"));
 
@@ -155,6 +237,8 @@ document.getElementById("addProductForm").onsubmit = async function (e) {
 
 // Add this event listener to the file input
 document.getElementById('productImage').addEventListener('change', handleFileSelect);
+//document.getElementById('editProductImage').addEventListener('change', handleEditFileSelect);
+
 
 
 // Add this function to handle file selection and preview for the edit form
@@ -231,7 +315,7 @@ document.querySelector(".table").addEventListener("click", async (e) => {
         const name = row.querySelector(".name").textContent.trim();
         const category = row.querySelector(".categoriesId").textContent.trim();
         const brand = row.querySelector(".brand").textContent.trim();
-        const price = row.querySelector(".price").textContent.trim();
+        const price = row.querySelector(".price").id.trim();
         const stock = row.querySelector(".role").textContent.trim();
         //const imagePath = row.querySelector("img").src;
         const imgElement = row.querySelector("img").src;
@@ -324,9 +408,11 @@ document.querySelector(".table").addEventListener("click", async (e) => {
     }
 });
 
-// Xử lý sự kiện cập nhật sản phẩm
+// Xử lý sự kiện cập nhật sản phẩm 
 document.getElementById("updateProductForm").onsubmit = async function (e) {
     e.preventDefault(); // Ngăn reload trang
+
+    const formData = new FormData(document.getElementById("updateProductForm"));
 
     // Thu thập thông tin từ form
     const productData = {
@@ -370,6 +456,26 @@ document.getElementById("updateProductForm").onsubmit = async function (e) {
     console.log(productData);
 
     try {
+
+        const uploadResponse = await fetch("/products/upload-img", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (uploadResponse.ok) {
+            const data = await uploadResponse.json();
+
+            const imageUrls = data.imageUrls;
+
+            //them tat ca imageUrls vao productData.extraImages
+            productData.extraImages = productData.extraImages.concat(imageUrls);
+
+            document.getElementById("editProductImage").value = "";
+
+        } else {
+            //alert("Failed to upload image");
+        }
+
         // Gửi dữ liệu đến server qua API
         const response = await fetch(`/products/api/${productId}`, {
             method: "PUT",
@@ -540,6 +646,20 @@ async function loadUsers(
                 .toString()
                 .padStart(2, "0")} - ${date.getFullYear()}`;
 
+
+            const rawPrice = parseFloat(product.price);
+            const formattedPrice = (() => {
+                const number = parseFloat(product.price);
+                if (isNaN(number)) return "Rp 0"; // Xử lý nếu `product.price` không phải là số hợp lệ
+                return (
+                    "Rp " +
+                    number.toLocaleString("id-ID", {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                    })
+                );
+            })();
+
             const row = `
                 <tr data-product-id="${product._id}">
                     <td><img
@@ -567,8 +687,8 @@ async function loadUsers(
                         </td>
 
                         <td>
-                            <p class="price">
-                                ${product.price}
+                            <p class="price" id=${product.price}>
+                                ${formattedPrice}
                             </p>
                         </td>
 

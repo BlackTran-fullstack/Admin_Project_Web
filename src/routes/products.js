@@ -9,6 +9,10 @@ const paginatedResults = require("../middlewares/paginated");
 
 const { uploadAvatar } = require("../middlewares/multer");
 
+
+
+
+
 router.get("/api", paginatedResults(products), productsControllers.getPaginatedProducts);
 
 router.get("/api/:id", productsControllers.getProduct);
@@ -19,7 +23,11 @@ router.delete("/api/:id", productsControllers.deleteProduct);
 
 router.put("/api/:id", productsControllers.updateProduct);
 
-router.post("/upload-img", uploadAvatar, productsControllers.uploadImage);  
+router.post("/upload-img", uploadAvatar, productsControllers.uploadImage);
+
+router.get("/categories", productsControllers.getCategories);
+
+router.get("/brands", productsControllers.getBrands);
 
 router.get("/", productsControllers.getProducts);
 
