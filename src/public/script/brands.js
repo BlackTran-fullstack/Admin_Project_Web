@@ -1,6 +1,6 @@
 const constLimit = 3;
 
-async function loadCategories(
+async function loadBrands(
     page = 1,
     limit = constLimit,
     sortBy = "name",
@@ -18,7 +18,7 @@ async function loadCategories(
             fields,
         });
 
-        const res = await fetch(`/categories/api?${queryParameters.toString()}`);
+        const res = await fetch(`/brands/api?${queryParameters.toString()}`);
 
         if (!res.ok) {
             throw new Error("Internal Server Error");
@@ -26,15 +26,14 @@ async function loadCategories(
 
         const data = await res.json();
 
-        const categoriesTable = document.querySelector(".table tbody");
-        categoriesTable.innerHTML = "";
+        const brandsTable = document.querySelector(".table tbody");
+        brandsTable.innerHTML = "";
 
-        data.data.forEach((cate) => {
+        data.data.forEach((brand) => {
             const row = `
-                <tr data-id="${cate._id}"> 
-                    <td><p class="id">${cate._id}</p></td>
-                    <td><p class="name">${cate.name}</p></td>
-                    <td><p class="description">${cate.desc}</p></td>
+                <tr data-id="${brand._id}">
+                    <td><p class="id">${brand._id}</p></td>
+                    <td><p class="name">${brand.name}</p></td>
                     <td>
                         <button class="btn btn-update">
                             <i class="fa-solid fa-pen"></i>
@@ -46,7 +45,7 @@ async function loadCategories(
                     </td>
                 </tr>
             `;
-            categoriesTable.innerHTML += row;
+            brandsTable.innerHTML += row;
         });
 
         const updateButtons = document.querySelectorAll(".btn-update");
@@ -55,13 +54,11 @@ async function loadCategories(
                 const row = button.closest("tr");
                 const id = row.getAttribute("data-id");
                 const name = row.querySelector(".name").textContent;
-                const desc = row.querySelector(".description").textContent;
 
-                const updateDialog = document.querySelector("#updateCategoriesDialog");
-                const form = updateDialog.querySelector("#updateCateForm");
+                const updateDialog = document.querySelector("#updateBrandDialog");
+                const form = updateDialog.querySelector("#updateBrandForm");
 
                 form.name.value = name;
-                form.description.value = desc;
 
                 const cancelButton = updateDialog.querySelector("#closeDialog");
                 cancelButton.onclick = function () {
@@ -72,19 +69,18 @@ async function loadCategories(
                     event.preventDefault();
 
                     const name = form.name.value;
-                    const desc = form.description.value;
 
-                    const res = await fetch(`/categories/api/${id}`, {
+                    const res = await fetch(`/brands/api/${id}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ name, desc }),
+                        body: JSON.stringify({ name }),
                     });
 
                     if (res.ok) {
-                        alert("Category updated successfully");
-                        loadCategories();
+                        alert("Brand updated successfully");
+                        loadBrands();
                         updateDialog.style.display = "none";
                     }
                 };
@@ -96,27 +92,27 @@ async function loadCategories(
         const deleteButtons = document.querySelectorAll(".btn-delete");
         deleteButtons.forEach((button) => {
             button.onclick = async function () {
-                if (!confirm("Are you sure you want to delete this category?")) {
+                if (!confirm("Are you sure you want to delete this brand?")) {
                     return;
                 }
 
                 const row = button.closest("tr");
                 const id = row.getAttribute("data-id");
 
-                const res = await fetch(`/categories/api/${id}`, {
+                const res = await fetch(`/brands/api/${id}`, {
                     method: "DELETE",
                 });
 
                 if (res.ok) {
-                    alert("Category deleted successfully");
-                    loadCategories();
+                    alert("Brand deleted successfully");
+                    loadBrands();
                 }
             };
         });
 
         updatePagination(data.page, data.totalPages);
     } catch (error) {
-        console.error("Error loading users:", error);
+        console.error("Error loading brands:", error);
     }
 }
 
@@ -130,7 +126,7 @@ function updatePagination(currentPage, totalPages) {
     if (currentPage > 1) {
         previousButton.classList.remove("disabled");
         previousButton.onclick = () =>
-            loadCategories(currentPage - 1, constLimit);
+            loadBrands(currentPage - 1, constLimit);
     } else {
         previousButton.classList.add("disabled");
         previousButton.onclick = null;
@@ -139,7 +135,7 @@ function updatePagination(currentPage, totalPages) {
     if (currentPage < totalPages) {
         nextButton.classList.remove("disabled");
         nextButton.onclick = () =>
-            loadCategories(currentPage + 1, constLimit);
+            loadBrands(currentPage + 1, constLimit);
     } else {
         nextButton.classList.add("disabled");
         nextButton.onclick = null;
@@ -148,32 +144,31 @@ function updatePagination(currentPage, totalPages) {
 
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#btn-create").onclick = function () {
-        const addDialog = document.querySelector("#addCategoriesDialog");
+        const addDialog = document.querySelector("#addBrandDialog");
         
         const cancelButton = addDialog.querySelector("#closeDialog");
         cancelButton.onclick = function () {
             addDialog.style.display = "none";
         };
         
-        const form = addDialog.querySelector("#addCateForm");
+        const form = addDialog.querySelector("#addBrandForm");
         form.onsubmit = async function (event) {
             event.preventDefault();
             
             const name = form.name.value;
-            const desc = form.description.value;
             
-            const res = await fetch("/categories/api", {
+            const res = await fetch("/brands/api", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name, desc }),
+                body: JSON.stringify({ name }),
             });
             
             if (res.ok) {
                 form.reset();
-                alert("Category created successfully");
-                loadCategories();
+                alert("Brand created successfully");
+                loadBrands();
                 addDialog.style.display = "none";
             }
         }
@@ -181,5 +176,5 @@ document.addEventListener("DOMContentLoaded", function () {
         addDialog.style.display = "flex";
     };
 
-    loadCategories();
+    loadBrands();
 });

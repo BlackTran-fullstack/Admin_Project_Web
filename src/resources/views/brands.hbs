@@ -1,0 +1,88 @@
+<main id="brands">
+    <div class="container">
+        <div class="header-page">
+            <h1 class="title">Manage Brands</h1>
+
+            <div class="actions">
+                <div class="action search">
+                    <i class="fa-solid fa-search"></i>
+
+                    <input
+                        type="text"
+                        class="input-search"
+                        placeholder="Search..."
+                    />
+                </div>
+            </div> 
+        </div>
+
+        <div class="add-group">
+            <button class="add-btn" id="btn-create">
+                <i class="fa-solid fa-plus"></i>
+                Create
+            </button>
+        </div>
+
+        <div class="content-page">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Brand ID</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <div class="info">
+                    <p class="text"></p>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <button class="btn btn-next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addBrandDialog" class="dialog" style="display: none;">
+        <div class="dialog-content">
+            <h2>Add New Brand</h2>
+            <form id="addBrandForm">
+                <label for="brandName">Name:</label>
+                <input type="text" id="brandName" name="name" required>
+
+                <div class="button-group">
+                    <button type="submit">Add Brand</button>
+                    <button type="button" id="closeDialog">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="dialog" id="updateBrandDialog" style="display: none;">
+        <div class="dialog-content">
+            <h2>Edit Brand</h2>
+            <form id="updateBrandForm">
+                <label for="brandName">Name:</label>
+                <input type="text" id="brandName" name="name" required>
+
+                <div class="button-group">
+                    <button type="submit">Update Brand</button>
+                    <button type="button" id="closeDialog">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script src="/script/brands.js"></script>
