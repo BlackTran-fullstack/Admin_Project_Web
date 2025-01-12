@@ -1,9 +1,9 @@
 function paginatedResults(model) {
     return async (req, res, next) => {
-
         console.log("model.modelName: ", model.modelName);
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
+
         const sortBy = req.query.sortBy || "createdAt";
         const order = req.query.order === "desc" ? -1 : 1;
 
@@ -15,7 +15,7 @@ function paginatedResults(model) {
         const categoryFilter = req.query.category || "";
         const brandFilter = req.query.brand || "";
 
-        const searchFields = req.query.fields 
+        const searchFields = req.query.fields
             ? req.query.fields.split(",")
             : ["firstName", "lastName", "email"];
 
@@ -35,11 +35,10 @@ function paginatedResults(model) {
         if (categoryFilter) {
             query["categoriesId"] = categoryFilter;
         }
-        
+
         if (brandFilter) {
             query["brandsId"] = brandFilter;
         }
-
 
         if (searchFields.includes("orderId")) {
             query = {
@@ -48,25 +47,23 @@ function paginatedResults(model) {
         }
 
         try {
-            let totalDocuments = await model.countDocuments(query).exec();
-
-            if(totalDocuments === 0) {
-                query = {};
-                totalDocuments = await model.countDocuments(query).exec();
-            }
+            const totalDocuments = await model.countDocuments(query).exec();
 
             const totalPages = Math.ceil(totalDocuments / limit);
 
             // const results = await model
             //     .find(query)
-                
+
             //     .sort({ [sortBy]: order })
             //     .limit(limit)
             //     .skip((page - 1) * limit)
             //     .exec();
 
-
-            let results = model.find(query).sort({ [sortBy]: order }).limit(limit).skip((page - 1) * limit);
+            let results = model
+                .find(query)
+                .sort({ [sortBy]: order })
+                .limit(limit)
+                .skip((page - 1) * limit);
 
             // Only populate "categoriesId" if it's a Product model
             if (model.modelName === "Products") {
@@ -77,7 +74,6 @@ function paginatedResults(model) {
             // Execute the query
             const populatedResults = await results.exec();
 
-
             res.paginatedResults = {
                 //data: results,
                 data: populatedResults,
@@ -86,7 +82,6 @@ function paginatedResults(model) {
                 totalPages,
                 limit,
             };
-            console.log("Paginated Results:", res.paginatedResults);
             next();
         } catch (error) {
             res.status(500).json({ message: "Internal Server Error" });

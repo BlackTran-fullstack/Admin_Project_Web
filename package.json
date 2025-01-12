@@ -19,6 +19,7 @@
     "homepage": "https://github.com/BlackTran-fullstack/Admin_Project_Web#readme",
     "description": "",
     "dependencies": {
+        "@supabase/supabase-js": "^2.47.12",
         "bcrypt": "^5.1.1",
         "algoliasearch": "^5.19.0",
         "express": "^4.21.2",
@@ -26,6 +27,7 @@
         "express-handlebars": "^8.0.1",
         "express-session": "^1.18.1",
         "mongoose": "^8.9.3",
+        "multer": "^1.4.5-lts.1",
         "nodemailer": "^6.9.16",
         "passport": "^0.7.0",
         "passport-local": "^1.0.0",

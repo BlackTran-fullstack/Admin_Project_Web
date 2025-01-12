@@ -133,15 +133,21 @@
 #accounts .content-page .table th,
 #accounts .content-page .table td {
     border-bottom: 1px solid #e8e8e8;
-    padding: 15px 40px;
+    padding: 12px 40px;
 
     font-size: 1.4rem;
     text-align: left;
     vertical-align: middle;
 }
 
+#accounts .content-page .table .name,
+#accounts .content-page .table .creation-date {
+    white-space: nowrap;
+}
+
 #accounts .content-page .table th {
     font-weight: 500;
+    white-space: nowrap;
 }
 
 #accounts .content-page .table tbody tr {
@@ -171,7 +177,7 @@
     align-items: center;
     gap: 5px;
 
-    width: 80px;
+    width: 75px;
     height: 35px;
 
     color: white;
