@@ -41,14 +41,7 @@
                 <label for="category">Category:</label>
                 <select id="category" class="select-filter-category">
                     <option value="">All</option>
-                    <option value="673978e6d2067a8cc64f7dee">Table</option>
-                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
-                    <option value="673978e6d2067a8cc64f7def">Mirror</option>
-                    <option value="673979c4d2067a8cc64f7df1">Chair</option>
-                    <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
-                    <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
-                    <option value="67397ab9d2067a8cc64f7df5">Bed</option>
-                    <option value="673eeb15f80d6a76cf39967c">Others</option>
+                    
                 </select>
             </div>
 
@@ -56,13 +49,7 @@
                 <label for="brand">Brand:</label>
                 <select id="brand" class="select-filter-brand">
                     <option value="">All</option>
-                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
-                    <option value="67449f674fc73c80de04b2a7">ModernHome</option>
-                    <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
-                    <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
-                    <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
-                    <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
-                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
+                    
                 </select>
             </div>
 
@@ -105,10 +92,10 @@
         </div>
     </div>
 
-    <div id="addProductDialog" class="dialog" style="display: none;">
+    <div id="addProductDialog" class="dialog" style="display: none;"> 
         <div class="dialog-content">
             <h2>Add New Product</h2>
-            <form id="addProductForm">
+            <form id="addProductForm" action="/products/upload-img" method="POST" enctype="multipart/form-data">
                 <label for="productName">Name:</label>
                 <input type="text" id="productName" name="name" required>
                 
@@ -117,35 +104,36 @@
                 
                 <label for="productCategory">Category:</label>
                 <select id="productCategory" name="category">
-                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
+                    {{!-- <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
                     <option value="673978e6d2067a8cc64f7dee">Table</option>
                     <option value="673978e6d2067a8cc64f7def">Mirror</option>
                     <option value="673979c4d2067a8cc64f7df1">Chair</option>
                     <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
                     <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
                     <option value="67397ab9d2067a8cc64f7df5">Bed</option>
-                    <option value="673eeb15f80d6a76cf39967c">Others</option>
+                    <option value="673eeb15f80d6a76cf39967c">Others</option> --}}
                 </select>
 
                 <label for="productBrand">Brand:</label>
                 <select id="productBrand" name="brand">
-                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
+                    {{!-- <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
                     <option value="67449f674fc73c80de04b2a7">ModernHome</option>
                     <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
                     <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
                     <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
                     <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
-                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>  --}}
                 </select>
                 
                 <label for="productStock">Stock:</label>
                 <input type="number" id="productStock" name="stock">
                 
-                <label for="productImage">Image URL:</label>
-                <input type="text" id="productImage" name="imagePath">
+                {{!-- <label for="productImage">Image URL:</label>
+                <input type="text" id="productImage" name="imagePath"> --}}
 
-                {{!-- <label for="productImage">Upload Images:</label>
-                <input type="file" id="productImage" name="imageFiles" multiple accept="image/*"> --}}
+                <label for="productImage">Upload Images:</label>
+                <input type="file" id="productImage" name="imageFiles" accept="image/*" multiple>
+                <div id="imagePreviewContainer" class="image-preview-container"></div>
 
                 <div class="button-group">
                     <button type="submit">Add Product</button>
@@ -156,9 +144,9 @@
     </div>
 
     <div class="dialog" id="updateProductDialog" style="display: none;">
-        <div class="dialog-content">
+        <div class="dialog-content"> 
             <h2>Edit Product</h2>
-            <form id="updateProductForm">
+            <form id="updateProductForm" action="/products/upload-img" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="editProductId" name="id">
                 
                 <label for="editProductName">Name:</label>
@@ -169,32 +157,36 @@
                 
                 <label for="editProductCategory">Category:</label>
                 <select id="editProductCategory" name="category">
-                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
+                    {{!-- <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
                     <option value="673978e6d2067a8cc64f7dee">Table</option>
                     <option value="673978e6d2067a8cc64f7def">Mirror</option>
                     <option value="673979c4d2067a8cc64f7df1">Chair</option>
                     <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
                     <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
                     <option value="67397ab9d2067a8cc64f7df5">Bed</option>
-                    <option value="673eeb15f80d6a76cf39967c">Others</option>
+                    <option value="673eeb15f80d6a76cf39967c">Others</option> --}}
                 </select>
 
                 <label for="editProductBrand">Brand:</label>
                 <select id="editProductBrand" name="brand">
-                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
+                    {{!-- <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
                     <option value="67449f674fc73c80de04b2a7">ModernHome</option>
                     <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
                     <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
                     <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
                     <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
-                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option> --}}
                 </select>
 
                 <label for="editProductStock">Stock:</label>
                 <input type="number" id="editProductStock" name="stock">
 
-                <label for="editProductImage">Image URL:</label>
-                <input type="text" id="editProductImage" name="imagePath">
+                <label for="editProductImage">Images:</label>
+                <div id="editImagePreviewContainer" class="image-preview-container"></div>
+
+                <label for="editProductImage">Add Images:</label>
+                <input type="file" id="editProductImage" name="imageFiles" multiple accept="image/*">
+                {{!-- <div id="EditPreviewContainer" class="image-preview-container"></div> --}}
 
                 {{!-- <label for="editProductImage">Upload Images:</label>
                 <input type="file" id="editProductImage" name="imageFiles" multiple accept="image/*"> --}}

@@ -4,8 +4,13 @@ function paginatedResults(model) {
         console.log("model.modelName: ", model.modelName);
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
+<<<<<<< HEAD
         const sortBy = req.query.sortBy || "createdAt";
         const order = req.query.order === "desc" ? -1 : 1;
+=======
+        const sortBy = req.query.sortBy || "_id";
+        const order = req.query.order === "desc" ? -1 : 1;  
+>>>>>>> origin/uploadImage
 
         const search = req.query.search || "";
 
