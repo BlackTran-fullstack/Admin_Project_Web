@@ -11,17 +11,25 @@ const ObjectId = mongoose.Types.ObjectId; // Add this line to fix the error
 
 class ProductsController {
     // [GET] /products
-    getProducts(req, res, next) {
-        Products.find({})
-            .populate("categoriesId", "name")
-            .populate("brandsId", "name")
-            .then((products) => {
-                res.render("products", {
-                    products,
-                    showNavbar: true,
-                });
-            })
-            .catch(next);
+    async getProducts(req, res, next) {
+        try {
+            const products = await Products.find({})
+                .populate("categoriesId", "name")
+                .populate("brandsId", "name");
+
+            const categories = await Categories.find({});
+            const brands = await Brands.find({});
+
+            res.render("products", {
+                products: mutipleMongooseToObject(products),
+                categories: mutipleMongooseToObject(categories),
+                brands: mutipleMongooseToObject(brands),
+                showNavbar: true,
+            });
+        } catch (error) {
+            console.error("Error fetching products, categories, or brands:", error);
+            next(error);
+        }
     }
 
     // [GET] /products/api
