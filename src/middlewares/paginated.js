@@ -14,9 +14,6 @@ function paginatedResults(model) {
         // Lọc theo category và brand
         const categoryFilter = req.query.category || "";
         const brandFilter = req.query.brand || "";
-        
-        console.log("categoryFilter: ", categoryFilter);
-        console.log("brandFilter: ", brandFilter);
 
         const searchFields = req.query.fields 
             ? req.query.fields.split(",")
