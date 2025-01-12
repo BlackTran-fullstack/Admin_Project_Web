@@ -1,7 +1,7 @@
 <main id="products">
     <div class="container">
         <div class="header-page">
-            <h1 class="title">Manage Products</h1>
+            <h1 class="title">Manager Products</h1>
 
             <div class="actions">
                 <div class="action search">
@@ -24,6 +24,7 @@
         </div>
 
         <div class="sort-options">
+
             <div class="sort-group">
                 <label for="sort">Sort by:</label>
                 <select id="sort" class="select-sort">
@@ -32,6 +33,7 @@
                     <option value="createdAt">Creation Time</option>
                 </select>
             </div>
+
         </div> 
 
         <div class="filter-options">
@@ -39,9 +41,14 @@
                 <label for="category">Category:</label>
                 <select id="category" class="select-filter-category">
                     <option value="">All</option>
-                    {{#each categories}}
-                        <option value="{{this._id}}">{{this.name}}</option>
-                    {{/each}}
+                    <option value="673978e6d2067a8cc64f7dee">Table</option>
+                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
+                    <option value="673978e6d2067a8cc64f7def">Mirror</option>
+                    <option value="673979c4d2067a8cc64f7df1">Chair</option>
+                    <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
+                    <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
+                    <option value="67397ab9d2067a8cc64f7df5">Bed</option>
+                    <option value="673eeb15f80d6a76cf39967c">Others</option>
                 </select>
             </div>
 
@@ -49,11 +56,16 @@
                 <label for="brand">Brand:</label>
                 <select id="brand" class="select-filter-brand">
                     <option value="">All</option>
-                    {{#each brands}}
-                        <option value="{{this._id}}">{{this.name}}</option>
-                    {{/each}}
+                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
+                    <option value="67449f674fc73c80de04b2a7">ModernHome</option>
+                    <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
+                    <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
+                    <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
+                    <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
                 </select>
             </div>
+
         </div>
 
         <div class="content-page">
@@ -105,16 +117,25 @@
                 
                 <label for="productCategory">Category:</label>
                 <select id="productCategory" name="category">
-                    {{#each categories}}
-                        <option value="{{this._id}}">{{this.name}}</option>
-                    {{/each}}
+                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
+                    <option value="673978e6d2067a8cc64f7dee">Table</option>
+                    <option value="673978e6d2067a8cc64f7def">Mirror</option>
+                    <option value="673979c4d2067a8cc64f7df1">Chair</option>
+                    <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
+                    <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
+                    <option value="67397ab9d2067a8cc64f7df5">Bed</option>
+                    <option value="673eeb15f80d6a76cf39967c">Others</option>
                 </select>
 
                 <label for="productBrand">Brand:</label>
                 <select id="productBrand" name="brand">
-                    {{#each brands}}
-                        <option value="{{this._id}}">{{this.name}}</option>
-                    {{/each}}
+                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
+                    <option value="67449f674fc73c80de04b2a7">ModernHome</option>
+                    <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
+                    <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
+                    <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
+                    <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
                 </select>
                 
                 <label for="productStock">Stock:</label>
@@ -122,6 +143,9 @@
                 
                 <label for="productImage">Image URL:</label>
                 <input type="text" id="productImage" name="imagePath">
+
+                {{!-- <label for="productImage">Upload Images:</label>
+                <input type="file" id="productImage" name="imageFiles" multiple accept="image/*"> --}}
 
                 <div class="button-group">
                     <button type="submit">Add Product</button>
@@ -145,16 +169,25 @@
                 
                 <label for="editProductCategory">Category:</label>
                 <select id="editProductCategory" name="category">
-                    {{#each categories}}
-                        <option value="{{this._id}}">{{this.name}}</option>
-                    {{/each}}
+                    <option value="673978e6d2067a8cc64f7ded">Cabinet</option>
+                    <option value="673978e6d2067a8cc64f7dee">Table</option>
+                    <option value="673978e6d2067a8cc64f7def">Mirror</option>
+                    <option value="673979c4d2067a8cc64f7df1">Chair</option>
+                    <option value="67397ab9d2067a8cc64f7df3">Shelf</option>
+                    <option value="67397ab9d2067a8cc64f7df4">Lamp</option>
+                    <option value="67397ab9d2067a8cc64f7df5">Bed</option>
+                    <option value="673eeb15f80d6a76cf39967c">Others</option>
                 </select>
 
                 <label for="editProductBrand">Brand:</label>
                 <select id="editProductBrand" name="brand">
-                    {{#each brands}}
-                        <option value="{{this._id}}">{{this.name}}</option>
-                    {{/each}}
+                    <option value="67449f554fc73c80de04b2a6">WoodCraft</option>
+                    <option value="67449f674fc73c80de04b2a7">ModernHome</option>
+                    <option value="67449f784fc73c80de04b2a8">RelaxCo</option>
+                    <option value="67449f8b4fc73c80de04b2a9">DreamWood</option>
+                    <option value="67449f9e4fc73c80de04b2aa">SleepWell</option>
+                    <option value="67449fbf4fc73c80de04b2ab">LightCraft</option>
+                    <option value="67449ffa4fc73c80de04b2ac">ReflecStyle</option>
                 </select>
 
                 <label for="editProductStock">Stock:</label>
@@ -163,13 +196,18 @@
                 <label for="editProductImage">Image URL:</label>
                 <input type="text" id="editProductImage" name="imagePath">
 
+                {{!-- <label for="editProductImage">Upload Images:</label>
+                <input type="file" id="editProductImage" name="imageFiles" multiple accept="image/*"> --}}
+
                 <div class="button-group">
                     <button type="submit">Update Product</button>
                     <button type="button" id="closeUpdateDialog">Cancel</button>
                 </div>
             </form>
         </div>
+
     </div>
+
 </main>
 
-<script src="/script/products.js"></script>
+<script src="/script/products.js"></script> 
