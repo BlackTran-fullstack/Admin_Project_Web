@@ -10,7 +10,7 @@ function paginatedResults(model) {
             ? req.query.fields.split(",")
             : ["name", "email"];
 
-        const query = searchFields.length
+        let query = searchFields.length
             ? {
                   $or: searchFields.map((field) => ({
                       [field]: { $regex: search, $options: "i" },
@@ -18,8 +18,19 @@ function paginatedResults(model) {
               }
             : {};
 
+            if (searchFields.includes("orderId")) {
+                query = {
+                    orderId: search,
+                };
+            }
+
         try {
-            const totalDocuments = await model.countDocuments(query).exec();
+            let totalDocuments = await model.countDocuments(query).exec();
+
+            if(totalDocuments === 0) {
+                query = {};
+                totalDocuments = await model.countDocuments(query).exec();
+            }
 
             const totalPages = Math.ceil(totalDocuments / limit);
 
@@ -37,6 +48,7 @@ function paginatedResults(model) {
                 totalPages,
                 limit,
             };
+            console.log("Paginated Results:", res.paginatedResults);
             next();
         } catch (error) {
             res.status(500).json({ message: "Internal Server Error" });

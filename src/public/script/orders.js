@@ -54,18 +54,22 @@ async function loadOrders(
         data.data.forEach((order) => {
             const row = `
                 <tr>
+                    <td class="hidden"><p class="order-id">${order._id}</p></td>
                     <td><p class="user-id">${order.user.email}</p></td>
                     <td><p class="creation-date">${formattedDate(order.createdAt)}</p></td>
                     <td><p class="status">${order.status}</p></td>
                     <td><p class="total">${formattedTotal(order.total)}</p></td>
                     <td><p class="delivery-unit">${order.deliveryUnit}</p></td>
                     <td><p class="payment-method">${order.paymentMethod}</p></td>
-                    <td><a href="/orders/${order._id}" class="btn btn-primary">View</a></td>
+                    <td><a href="/orders/orderDetails/${order._id}" class="btn btn-primary">View</a></td>
+                    <td><button class="btn btn-primary approve">Approve</button></td>
                 </tr>
             `;
 
             ordersTable.insertAdjacentHTML("beforeend", row);
         });
+
+        setApproveButton();
 
         updatePagination(data.page, data.totalPages);
     } catch (error) {
@@ -99,3 +103,46 @@ function updatePagination(currentPage, totalPages) {
 }
 
 loadOrders();
+
+function setApproveButton() {
+    const approveButtons = document.querySelectorAll(".approve");
+    approveButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            const confirmation = confirm("Are you sure you want to approve this order?");
+            if (confirmation) {
+                updateOrderStatus(event);
+            }
+        });
+    });
+};
+
+async function updateOrderStatus(event) {
+    const row = event.target.closest("tr");
+    const orderId = row.querySelector(".order-id").textContent;
+    const status = "APPROVED";
+
+    const data = { orderId, status };
+    console.log("Data to be sent:", data); // Log the data to be sent
+
+    try {
+        const response = await fetch('/orders/api/updateOrderStatus', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data), // Stringify the data
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Order status updated successfully!');
+            // Optionally, update the UI to reflect the approved status
+            row.querySelector(".status").textContent = status;
+        } else {
+            alert('Failed to update order status.');
+        }
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        alert('An error occurred while updating the order status.');
+    }
+}

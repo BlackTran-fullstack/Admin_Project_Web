@@ -22,6 +22,7 @@ class OrdersController {
             const orders = await Orders.find({});
             res.render("orders", {
                 orders: mutipleMongooseToObject(orders),
+                showNavbar: true,
             });
         } catch (error) {
             console.error("Error in getOrders:", error);
@@ -32,25 +33,45 @@ class OrdersController {
         }
     }
 
-    // [GET] /list-orders/:orderId
+    // [GET] /orders/api/orderDetails/:orderId
+    async orderDetailsByOrderId(req, res) {
+        if (res.paginatedResults) {
+            const orderDetails = res.paginatedResults.data;
+
+            console.log("Order Details:", orderDetails);
+
+            let results = [];
+    
+            for (let i = 0; i < orderDetails.length; i++) {
+                const product = await Products.findOne({ _id: orderDetails[i].productId });
+                results.push({
+                    ...orderDetails[i].toObject(),
+                    product: product ? product.toObject() : null,
+                });
+            }
+
+            res.json({
+                success: true,
+                data: results,
+                totalDocuments: res.paginatedResults.totalDocuments,
+                totalPages: res.paginatedResults.totalPages,
+                page: res.paginatedResults.page,
+                limit: res.paginatedResults.limit,
+            });
+        } else {
+            res.status(500).json({ message: "Pagination results not found" });
+        }
+    }
+
+    // [GET] /orders/orderDetails/:orderId
     async orderDetails(req, res) {
         try {
             const orderId = req.params.orderId;
             const orderDetails = await OrderDetails.find({ orderId });
-            let products = [];
-            for (const item of orderDetails) {
-                const product = await Products.findOne({ _id: item.productId });
-                console.log("product:", product);
-                products.push({
-                    orderDetailId: item._id,
-                    id: product._id,
-                    name: product.name,
-                    price: product.price,
-                    quantity: item.quantity,
-                });
-            }
+            const products = await Products.find({ _id: { $in: orderDetails.map((od) => od.productId) } });
             res.render("orderDetail", {
-                products: products,
+                orderId,
+                products: mutipleMongooseToObject(products),
                 user: mongooseToObject(req.user),
             });
         } catch (error) {
@@ -72,6 +93,30 @@ class OrdersController {
         }
         catch (error) {
             console.error("Error in orderDetail:", error);
+            res.status(500).json({
+                success: false,
+                errors: ["Server error. Please try again later."],
+            });
+        }
+    }
+
+    // [POST] /orders/api/updateOrderStatus/:orderId
+    async updateOrderStatus(req, res) {
+        try {
+            const { orderId, status } = req.body;
+            console.log("Order ID:", orderId);
+            console.log("Status:", status);
+    
+            const order = await Orders.findOne({ _id: orderId });
+            if (!order) {
+                return res.status(404).json({ success: false, errors: ["Order not found."] });
+            }
+    
+            order.status = status;
+            await order.save();
+            res.json({ success: true });
+        } catch (error) {
+            console.error("Error in updateOrderStatus:", error);
             res.status(500).json({
                 success: false,
                 errors: ["Server error. Please try again later."],

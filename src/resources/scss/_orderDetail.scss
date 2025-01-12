@@ -1,10 +1,4 @@
-#manageOrder {
-    .header-page {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: row;
-    }
-
+#orderDetail {
     h1 {
         font-size: 3.2rem;
         font-weight: 600;
@@ -40,66 +34,20 @@
 
                 td {
                     padding: 12px 15px;
+                    
                     p {
                         margin: 0;
+                        display: flex;
+                        align-items: center;
                     }
 
-                    .btn {
-                        display: inline-block;
-                        padding: 8px 12px;
-                        margin: 4px 0;
-                        border-radius: 4px;
-                        background-color: #b88e2f;
-                        color: #ffffff;
-                        text-decoration: none;
-                        text-align: center;
-
-                        &:hover {
-                            background-color: #f6b45f;
-                        }
+                    img{
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 5%;
                     }
                 }
             }
-        }
-    }
-
-    .container .header-page .search {
-        position: relative;
-        width: 250px;
-        height: 35px;
-
-        i{
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.6rem;
-            color: #000;
-
-            z-index: 99;
-        }
-
-        input {
-            width: 100%;
-            height: 100%;
-            padding-left: 45px;
-            border-radius: 12px;
-            border: 1px solid #e8e8e8;
-            outline: none;
-        
-            position: absolute;
-            left: 0;
-            top: 0;
-        
-            color: #000;
-        }
-
-        input:focus {
-            border-color: #b88e2f;
-        }
-
-        input::placeholder {
-            color: #000;
         }
     }
 
