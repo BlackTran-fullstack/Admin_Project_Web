@@ -1,0 +1,97 @@
+<main id="categories">
+    <div class="container">
+        <div class="header-page">
+            <h1 class="title">Manage Categories</h1>
+
+            <div class="actions">
+                <div class="action search">
+                    <i class="fa-solid fa-search"></i>
+
+                    <input
+                        type="text"
+                        class="input-search"
+                        placeholder="Search..."
+                    />
+                </div>
+            </div> 
+        </div>
+
+        <div class="add-group">
+            <button class="add-btn" id="btn-create">
+                <i class="fa-solid fa-plus"></i>
+                Create
+            </button>
+        </div>
+
+        <div class="content-page">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Categories id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <div class="info">
+                    <p class="text"></p>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+
+                    <button class="btn btn-next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addCategoriesDialog" class="dialog" style="display: none;">
+        <div class="dialog-content">
+            <h2>Add New Categories</h2>
+            <form id="addCateForm">
+                <label for="CateName">Name:</label>
+                <input type="text" id="CateName" name="name" required>
+                
+                <label for="CateDesc">Description</label>
+                <textarea id="CateDesc" name="description"></textarea>
+
+                <div class="button-group">
+                    <button type="submit">Add Category</button>
+                    <button type="button" id="closeDialog">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="dialog" id="updateCategoriesDialog" style="display: none;">
+        <div class="dialog-content">
+            <h2>Edit Categories</h2>
+            <form id="updateCateForm">
+                <label for="CateName">Name:</label>
+                <input type="text" id="CateName" name="name" required>
+                
+                <label for="CateDesc">Description</label>
+                <textarea id="CateDesc" name="description"></textarea>
+
+                <div class="button-group">
+                    <button type="submit">Update Category</button>
+                    <button type="button" id="closeDialog">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</main>
+
+<script src="/script/categories.js"></script> 

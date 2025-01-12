@@ -17,7 +17,6 @@ const { mongooseToObject } = require("../../util/mongoose");
 const ObjectId = mongoose.Types.ObjectId; // Add this line to fix the error
 
 class ProductsController {
-
     // [GET] /products/categories
     getCategories(req, res, next) {
         Categories.find({})
@@ -43,7 +42,8 @@ class ProductsController {
             .populate("brandsId", "name")
             .then((products) => {
                 res.render("products", {
-                    products
+                    products,
+                    showNavbar: true,
                 });
             })
             .catch(next);
@@ -76,13 +76,25 @@ class ProductsController {
             })
             .catch((error) => {
                 console.error("Error getting product:", error);
-                res.status(500).json({ message: "Failed to get product", error });
+                res.status(500).json({
+                    message: "Failed to get product",
+                    error,
+                });
             });
     }
 
     // [POST] /products/api
     createProduct(req, res, next) {
-        const { name, price, category, brand, stock, imagePath, extraImages, slug } = req.body;
+        const {
+            name,
+            price,
+            category,
+            brand,
+            stock,
+            imagePath,
+            extraImages,
+            slug,
+        } = req.body;
 
         // Tạo đối tượng sản phẩm mới
         const newProduct = new Products({
@@ -101,18 +113,23 @@ class ProductsController {
             .save()
             .then((savedProduct) => {
                 // Populate the category and return the saved product
-                return savedProduct.populate("categoriesId", "name").then((populatedProduct) => {
-                    res.status(201).json(populatedProduct); // Return the populated product
-                });
+                return savedProduct
+                    .populate("categoriesId", "name")
+                    .then((populatedProduct) => {
+                        res.status(201).json(populatedProduct); // Return the populated product
+                    });
             })
             .catch((error) => {
                 console.error("Error saving product:", error);
-                res.status(500).json({ message: "Failed to save product", error });
+                res.status(500).json({
+                    message: "Failed to save product",
+                    error,
+                });
             });
     }
 
     // [DELETE] /products/api/:id
-    deleteProduct(req, res, next) { 
+    deleteProduct(req, res, next) {
         const { id } = req.params;
 
         Products.findByIdAndDelete(id)
@@ -125,19 +142,34 @@ class ProductsController {
             })
             .catch((error) => {
                 console.error("Error deleting product:", error);
-                res.status(500).json({ message: "Failed to delete product", error });
+                res.status(500).json({
+                    message: "Failed to delete product",
+                    error,
+                });
             });
     }
 
     // [PUT] /products/api/:id
     updateProduct(req, res, next) {
-
         console.log("Vao updateProduct");
 
         const { id } = req.params;
-        const { name, price, category, brand, stock, imagePath, extraImages } = req.body;
+        const { name, price, category, brand, stock, imagePath, extraImages } =
+            req.body;
 
-        Products.findByIdAndUpdate(id, { name, price, categoriesId: category, brandsId: brand, stock, imagePath, extraImages }, { new: true })
+        Products.findByIdAndUpdate(
+            id,
+            {
+                name,
+                price,
+                categoriesId: category,
+                brandsId: brand,
+                stock,
+                imagePath,
+                extraImages,
+            },
+            { new: true }
+        )
             .then((updatedProduct) => {
                 if (updatedProduct) {
                     res.json(updatedProduct);
@@ -147,14 +179,16 @@ class ProductsController {
             })
             .catch((error) => {
                 console.error("Error updating product:", error);
-                res.status(500).json({ message: "Failed to update product", error });
+                res.status(500).json({
+                    message: "Failed to update product",
+                    error,
+                });
             });
-
     }
 
     // [POST] /products/upload-img
     async uploadImage(req, res, next) {
-        const files = req.files; 
+        const files = req.files;
 
         // Kiểm tra xem file có tồn tại hay không
         if (!files || files.length === 0) {
@@ -162,7 +196,6 @@ class ProductsController {
         }
 
         try {
-
             // Mảng lưu URL các ảnh đã upload
             const imageUrls = [];
 
@@ -173,20 +206,22 @@ class ProductsController {
 
                 // Upload file to Supabase
                 const { data, error } = await supabase.storage
-                    .from('images')
+                    .from("images")
                     .upload(`${fileName}`, file.buffer, {
-                        cacheControl: '3600', // 1 hour
+                        cacheControl: "3600", // 1 hour
                         upsert: true,
                     });
-    
+
                 if (error) {
-                    return res.status(500).json({ message: "Failed to upload image", error });
+                    return res
+                        .status(500)
+                        .json({ message: "Failed to upload image", error });
                 }
-    
+
                 const imageUrl = `${supabaseUrl}/storage/v1/object/public/images/${fileName}`;
                 imageUrls.push(imageUrl);
             }
-    
+
             // Trả về URL của file đã upload
             res.json({ imageUrls });
         } catch (error) {
@@ -194,7 +229,6 @@ class ProductsController {
             res.status(500).json({ message: "Failed to upload image", error });
         }
     }
-
 }
 
-module.exports = new ProductsController(); 
+module.exports = new ProductsController();
