@@ -10,6 +10,8 @@ const paginatedResults = require("../middlewares/paginated");
 
 router.get("/api", paginatedResults(users), usersControllers.getPaginatedUsers);
 
+router.get("/api/:userId", usersControllers.getUserById);
+
 router.get("/:id", usersControllers.getUser);
 
 router.post("/:id/ban", usersControllers.banUser);

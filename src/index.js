@@ -8,6 +8,7 @@ const { engine } = require("express-handlebars");
 const app = express();
 const port = 3000;
 
+app.use(express.json());
 const route = require("./routes");
 const db = require("./config/db");
 const flash = require("express-flash");

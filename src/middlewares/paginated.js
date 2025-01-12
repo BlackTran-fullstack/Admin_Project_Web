@@ -21,14 +21,15 @@ function paginatedResults(model) {
 
         const keywords = search.split(" ").filter((word) => word.trim() !== "");
 
-        const query = {
+        let query = searchFields.length ? 
+        {
             $and: keywords.map((keyword) => ({
                 $or: searchFields.map((field) => ({
                     [field]: { $regex: keyword, $options: "i" },
                 })),
             })),
-        };
-
+        }
+        : {};
 
         // Thêm điều kiện lọc Category và Brand nếu có
         if (categoryFilter) {
@@ -39,8 +40,20 @@ function paginatedResults(model) {
             query["brandsId"] = brandFilter;
         }
 
+
+        if (searchFields.includes("orderId")) {
+            query = {
+                orderId: search,
+            };
+        }
+
         try {
-            const totalDocuments = await model.countDocuments(query).exec();
+            let totalDocuments = await model.countDocuments(query).exec();
+
+            if(totalDocuments === 0) {
+                query = {};
+                totalDocuments = await model.countDocuments(query).exec();
+            }
 
             const totalPages = Math.ceil(totalDocuments / limit);
 
@@ -73,6 +86,7 @@ function paginatedResults(model) {
                 totalPages,
                 limit,
             };
+            console.log("Paginated Results:", res.paginatedResults);
             next();
         } catch (error) {
             res.status(500).json({ message: "Internal Server Error" });

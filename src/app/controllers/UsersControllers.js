@@ -26,6 +26,16 @@ class UsersControllers {
         }
     }
 
+    // [GET] /users/api/:userId
+    getUserById(req, res, next) {
+        const userId = req.params.userId;
+        Users.findOne({ _id: userId })
+            .then((user) => {
+                res.json(user);
+            })
+            .catch(next);
+    }
+
     // [GET] /users/:id
     getUser(req, res, next) {
         Users.findById(req.params.id)

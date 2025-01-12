@@ -77,6 +77,12 @@ class CategoriesController {
             })
             .catch(next);
     }
+
+    // dashboard data
+    // [GET] /categories/yearly-sales
+    getYearlySales(req, res, next) {
+        
+    }
 }
 
 module.exports = new CategoriesController();
