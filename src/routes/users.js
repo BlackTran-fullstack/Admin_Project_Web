@@ -16,6 +16,8 @@ router.post("/:id/ban", usersControllers.banUser);
 
 router.post("/:id/unban", usersControllers.unbanUser);
 
+router.get("/api/:userId", usersControllers.getUserById);
+
 router.get("/", usersControllers.getUsers);
 
 module.exports = router;

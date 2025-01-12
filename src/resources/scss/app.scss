@@ -1,29 +1,29 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html {
-  font-size: 62.5%;
+    font-size: 62.5%;
 }
 
 body {
-  display: flex;
+    display: flex;
 
-  font-size: 1.6rem;
-  font-family: "Poppins";
+    font-size: 1.6rem;
+    font-family: "Poppins";
 }
 
 main {
-  margin-left: 270px;
-  padding: 45px;
+    margin-left: 270px;
+    padding: 45px;
 }
 
 main.collapsed {
-  margin-left: 85px;
+    margin-left: 85px;
 }
 
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 .button {
@@ -58,3 +58,5 @@ button {
 @import "products";
 @import "categories";
 @import "brands";
+@import "order";
+@import "orderDetail";
