@@ -14,19 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
     revenueContainer = document.getElementById("total_revenue_chart");
     topProductsContainer = document.getElementById("top_products_chart");
 
-    document.getElementById("year").addEventListener("change", () => {
+    document.getElementById("startDate").addEventListener("change", () => {
         drawYearlySalesChart();
         drawOrderTimesChart();
         drawNumberOfOrdersChart();
         drawRevenueChart();
-        drawTopProductsChart();
+        drawTopRevenueProductsChart();
     });
-    document.getElementById("month").addEventListener("change", () => {
+    
+    document.getElementById("endDate").addEventListener("change", () => {
+        drawYearlySalesChart();
+        drawOrderTimesChart();
         drawNumberOfOrdersChart();
         drawRevenueChart();
-        drawTopProductsChart();
+        drawTopRevenueProductsChart();
     });
-    document.getElementById("day").addEventListener("change", drawTopProductsChart);
 
     drawCharts();
 });
@@ -36,20 +38,20 @@ async function drawCharts() {
     await drawOrderTimesChart();
     await drawNumberOfOrdersChart();
     await drawRevenueChart();
-    await drawTopProductsChart();
+    await drawTopRevenueProductsChart();
 }
 
-async function getYearlySales(year) {
-    const response = await fetch(`/orders/api/yearly_sales?year=${year}`);
+async function getYearlySales(startDate, endDate) {
+    const response = await fetch(`/orders/api/yearlySales?year=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
 
 async function drawYearlySalesChart() {
-    const yearInput = document.getElementById("year");
-    const year = yearInput.value;
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
 
-    const salesData = await getYearlySales(year);
+    const salesData = await getYearlySales(startDate, endDate);
 
     // Check if there is no data
     if (salesData.length === 0) {
@@ -77,17 +79,17 @@ async function drawYearlySalesChart() {
     chart.draw(data, options);
 }
 
-async function getOrderTimes(year) {
-    const response = await fetch(`/orders/api/orderTimes?year=${year}`);
+async function getOrderTimes(startDate, endDate) {
+    const response = await fetch(`/orders/api/orderTimes?year=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
 
 async function drawOrderTimesChart() {
-    const yearInput = document.getElementById("year");
-    const year = yearInput.value;
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
 
-    const orderTimes = await getOrderTimes(year);
+    const orderTimes = await getOrderTimes(startDate, endDate);
 
     // Check if there is no data
     if (orderTimes.length === 0) {
@@ -113,20 +115,17 @@ async function drawOrderTimesChart() {
     chart.draw(data, options);
 }
 
-async function getNumberOfOrders(year, month) {
-    const response = await fetch(`/orders/api/numberOfOrders?year=${year}&month=${month}`);
+async function getNumberOfOrders(startDate, endDate) {
+    const response = await fetch(`/orders/api/numberOfOrders?year=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
 
 async function drawNumberOfOrdersChart() {
-    const yearInput = document.getElementById("year");
-    const monthInput = document.getElementById("month");
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
 
-    const year = yearInput.value;
-    const month = monthInput.value;
-
-    const numberOfOrders = await getNumberOfOrders(year, month);
+    const numberOfOrders = await getNumberOfOrders(startDate, endDate);
 
     // Check if there is no data
     if (numberOfOrders.length === 0) {
@@ -154,20 +153,17 @@ async function drawNumberOfOrdersChart() {
     chart.draw(data, options);
 }
 
-async function getRevenue(month, year) {
-    const response = await fetch(`/orders/api/revenue?month=${month}&year=${year}`);
+async function getRevenue(startDate, endDate) {
+    const response = await fetch(`/orders/api/revenue?year=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
 
 async function drawRevenueChart() {
-    const monthInput = document.getElementById("month");
-    const yearInput = document.getElementById("year");
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
 
-    const month = monthInput.value;
-    const year = yearInput.value;
-
-    const revenue = await getRevenue(month, year);
+    const revenue = await getRevenue(startDate, endDate);
 
     // Check if there is no data
     if (revenue.length === 0) {
@@ -195,19 +191,18 @@ async function drawRevenueChart() {
     chart.draw(data, options);
 }
 
-async function getTopProducts(day, month, year) {
-    const response = await fetch(`/orders/api/topProducts?day=${day}&month=${month}&year=${year}`);
+async function getTopRevenueProducts(startDate, endDate) {
+    const response = await fetch(`/orders/api/topRevenueProducts?year=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
 
-async function drawTopProductsChart() {
+async function drawTopRevenueProductsChart() {
     // draw bar chart
-    const day = document.getElementById("day").value;
-    const month = document.getElementById("month").value;
-    const year = document.getElementById("year").value;
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
 
-    const topProducts = await getTopProducts(day, month, year);
+    const topProducts = await getTopRevenueProducts(startDate, endDate);
 
     // Check if there is no data
     if (topProducts.length === 0) {
@@ -218,7 +213,7 @@ async function drawTopProductsChart() {
     // Format the data for Google Charts
     const dataArray = [['Product', 'Quantity']];    
     topProducts.forEach(product => {
-        dataArray.push([product.product.name, product.count]);
+        dataArray.push([product.product.name, product.total]);
     });
 
     const data = google.visualization.arrayToDataTable(dataArray);

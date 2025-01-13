@@ -127,15 +127,21 @@ class OrdersController {
     }
 
     // dashboard data
-    // [GET] /orders/api/yearly_sales
-    // const response = await fetch(`/orders/api/yearly_sales?year=${year}`);
+    // [GET] /orders/api/yearlySales
     async getYearlySales(req, res) {
         try {
-            const { year } = req.query;
-            const monthlySales = await Orders.aggregate([
+            const { startDate, endDate } = req.query;
+            console.log("Start Date:", startDate);
+            console.log("End Date:", endDate);
+            const yearlySales = await Orders.aggregate([
                 {
                     $match: {
-                        $expr: { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
+                        $expr: {
+                            $and: [
+                                { $gte: ["$createdAt", new Date(startDate)] },
+                                { $lte: ["$createdAt", new Date(endDate)] },
+                            ],
+                        },
                     },
                 },
                 {
@@ -146,7 +152,9 @@ class OrdersController {
                 },
             ]);
 
-            res.json(monthlySales);
+            console.log("Yearly Sales:", yearlySales);
+
+            res.json(yearlySales);
         } catch (error) {
             console.error("Error in getYearlySales:", error);
             res.status(500).json({
@@ -159,12 +167,17 @@ class OrdersController {
     // [GET] /orders/api/orderTimes
     // morning: 6am - 12pm afternoon: 12pm - 6pm evening: 6pm - 12am night: 12am - 6am
     async getOrderTimes(req, res) {
-        const { year } = req.query;
         try {
+            const { startDate, endDate } = req.query;
             const orderTimes = await Orders.aggregate([
                 {
                     $match: {
-                        $expr: { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
+                        $expr: {
+                            $and: [
+                                { $gte: ["$createdAt", new Date(startDate)] },
+                                { $lte: ["$createdAt", new Date(endDate)] },
+                            ],
+                        },
                     },
                 },
                 {
@@ -180,9 +193,8 @@ class OrdersController {
                                     { case: { $and: [{ $gte: ["$hour", 6] }, { $lt: ["$hour", 12] }] }, then: "Morning" },
                                     { case: { $and: [{ $gte: ["$hour", 12] }, { $lt: ["$hour", 18] }] }, then: "Afternoon" },
                                     { case: { $and: [{ $gte: ["$hour", 18] }, { $lt: ["$hour", 24] }] }, then: "Evening" },
-                                    { case: { $and: [{ $gte: ["$hour", 0] }, { $lt: ["$hour", 6] }] }, then: "Night" },
                                 ],
-                                default: "Unknown",
+                                default: "Night",
                             },
                         },
                         count: { $sum: 1 },
@@ -203,21 +215,21 @@ class OrdersController {
     // [GET] /orders/api/numberOfOrders day by day 
     async getNumberOfOrders(req, res) {
         try {
-            const { year, month } = req.query;
+            const { startDate, endDate } = req.query;
             const numberOfOrders = await Orders.aggregate([
                 {
                     $match: {
                         $expr: {
                             $and: [
-                                { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
-                                { $eq: [{ $month: "$createdAt" }, parseInt(month)] },
+                                { $gte: ["$createdAt", new Date(startDate)] },
+                                { $lte: ["$createdAt", new Date(endDate)] },
                             ],
                         },
                     },
                 },
                 {
                     $group: {
-                        _id: { $dayOfMonth: "$createdAt" },
+                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
                         count: { $sum: 1 },
                     },
                 },
@@ -236,21 +248,21 @@ class OrdersController {
     // [GET] /orders/api/revenue day by day
     async getRevenue(req, res) {
         try {
-            const { year, month } = req.query;
+            const { startDate, endDate } = req.query;
             const revenue = await Orders.aggregate([
                 {
                     $match: {
                         $expr: {
                             $and: [
-                                { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
-                                { $eq: [{ $month: "$createdAt" }, parseInt(month)] },
+                                { $gte: ["$createdAt", new Date(startDate)] },
+                                { $lte: ["$createdAt", new Date(endDate)] },
                             ],
                         },
                     },
                 },
                 {
                     $group: {
-                        _id: { $dayOfMonth: "$createdAt" },
+                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
                         total: { $sum: "$total" },
                     },
                 },
@@ -267,10 +279,22 @@ class OrdersController {
     }
 
     // [GET] /orders/api/topProducts
-    async getTopProducts(req, res) {
+    // Get top 5 products with the highest revenue from startDate to endDate
+    async getTopRevenueProducts(req, res) {
         try {
-            const { day, month, year } = req.query;
-            const topProducts = await OrderDetails.aggregate([
+            const { startDate, endDate } = req.query;
+            const topRevenueProducts = await OrderDetails.aggregate([
+                {
+                    $lookup: {
+                        from: "products",
+                        localField: "productId",
+                        foreignField: "_id",
+                        as: "product",
+                    },
+                },
+                {
+                    $unwind: "$product",
+                },
                 {
                     $lookup: {
                         from: "orders",
@@ -286,47 +310,30 @@ class OrdersController {
                     $match: {
                         $expr: {
                             $and: [
-                                { $eq: [{ $year: "$order.createdAt" }, parseInt(year)] },
-                                { $eq: [{ $month: "$order.createdAt" }, parseInt(month)] },
-                                { $eq: [{ $dayOfMonth: "$order.createdAt" }, parseInt(day)] },
+                                { $gte: ["$order.createdAt", new Date(startDate)] },
+                                { $lte: ["$order.createdAt", new Date(endDate)] },
                             ],
                         },
                     },
                 },
                 {
                     $group: {
-                        _id: "$productId",
-                        count: { $sum: "$quantity" },
+                        _id: "$product._id",
+                        total: { $sum: "$product.price" },
+                        product: { $first: "$product" },
                     },
                 },
                 {
-                    $sort: { count: -1 },
+                    $sort: { total: -1 },
                 },
                 {
                     $limit: 5,
                 },
             ]);
 
-            console.log("Top Products:", topProducts);
-
-            // Convert product IDs to ObjectId
-            const productIds = topProducts.map(product => new mongoose.Types.ObjectId(product._id));
-
-            // Fetch product details
-            const products = await Products.find({ _id: { $in: productIds } });
-
-            // Map product details to topProducts
-            const topProductsWithDetails = topProducts.map(product => {
-                const productDetail = products.find(p => p._id.equals(product._id));
-                return {
-                    ...product,
-                    product: productDetail ? productDetail.toObject() : null,
-                };
-            });
-
-            res.json(topProductsWithDetails);
+            res.json(topRevenueProducts);
         } catch (error) {
-            console.error("Error in getTopProducts:", error);
+            console.error("Error in getTopRevenueProducts:", error);
             res.status(500).json({
                 success: false,
                 errors: ["Server error. Please try again later."],
