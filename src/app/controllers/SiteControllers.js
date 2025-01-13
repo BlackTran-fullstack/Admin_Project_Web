@@ -17,6 +17,13 @@ const path = require("path");
 const { stat } = require("fs");
 const mongoose = require("../../util/mongoose");
 
+const { createClient } = require("@supabase/supabase-js");
+
+// Cấu hình Supabase
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 // nodemailer stuff
 const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -147,6 +154,7 @@ class SiteControllers {
     async profilePost(req, res, next) {
         try {
             const userId = req.user.id;
+
             const { firstName, lastName, address, city, phone, email } =
                 req.body;
 
@@ -168,7 +176,14 @@ class SiteControllers {
                 }
             }
 
-            const data = { firstName, lastName, address, city, phone, email };
+            const data = {
+                firstName,
+                lastName,
+                address,
+                city,
+                phone,
+                email,
+            };
 
             await Users.findByIdAndUpdate(userId, data, { new: true });
             return res.status(200).json({
@@ -180,6 +195,64 @@ class SiteControllers {
             res.status(500).json({
                 success: false,
                 errors: ["Server error. Please try again later."],
+            });
+        }
+    }
+
+    // [POST] /profile/update-avatar
+    async updateAvatar(req, res) {
+        try {
+            const userId = req.user.id;
+            const file = req.file;
+
+            console.log(file);
+
+            // Kiểm tra xem file có tồn tại hay không
+            if (!file) {
+                return res.status(400).json({ error: "No file uploaded" });
+            }
+
+            // Tạo tên tệp duy nhất (ví dụ dùng UUID hoặc timestamp)
+            const fileName = `${Date.now()}-${file.originalname}`;
+
+            // Upload ảnh lên Supabase
+            const { data, error } = await supabase.storage
+                .from("images") // Bucket trong Supabase
+                .upload(`avatars/${fileName}`, file.buffer, {
+                    cacheControl: "3600",
+                    upsert: true,
+                });
+
+            if (error) {
+                console.error("Error uploading to Supabase:", error);
+                return res.status(500).json({
+                    error: "Error uploading avatar",
+                    details: error.message,
+                });
+            }
+
+            // Lấy URL của ảnh đã upload
+            const avatarUrl = `${supabaseUrl}/storage/v1/object/public/images/avatars/${fileName}`;
+
+            // Lưu URL vào MongoDB
+            const user = await Users.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: "User not found" });
+            }
+
+            // Cập nhật avatar mới cho người dùng
+            user.avatar = avatarUrl;
+            await user.save();
+
+            res.status(200).json({
+                message: "Avatar updated successfully",
+                avatarUrl,
+            });
+        } catch (error) {
+            console.error("Error updating avatar:", error);
+            res.status(500).json({
+                error: "Internal Server Error",
+                details: error.message,
             });
         }
     }

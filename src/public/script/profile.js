@@ -12,6 +12,26 @@ avatarInput.addEventListener("change", (event) => {
         const reader = new FileReader();
         reader.onload = async function (e) {
             avatarImg.src = e.target.result;
+            const formData = new FormData();
+            formData.append("avatar", avatarInput.files[0]);
+
+            try {
+                const response = await fetch("/profile/update-avatar", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert(result.message);
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.error}`);
+                }
+            } catch (err) {
+                console.error("Error updating avatar:", err);
+                alert("An error occurred while updating avatar.");
+            }
         };
         reader.readAsDataURL(file);
     }

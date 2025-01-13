@@ -3,10 +3,10 @@
     height: calc(100vh - 32px);
 }
 
-#accounts .container{
+#accounts .container {
     @media (max-width: 768px) {
         padding: 0 1rem;
-        margin-top:4rem;
+        margin-top: 4rem;
     }
 }
 
@@ -193,6 +193,7 @@
     font-size: 1.4rem;
     text-align: left;
     vertical-align: middle;
+    white-space: nowrap;
 
     @media (max-width: 768px) {
         padding: 10px 20px;

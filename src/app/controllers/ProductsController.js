@@ -87,10 +87,12 @@ class ProductsController {
     createProduct(req, res, next) {
         const {
             name,
+            description,
             price,
             category,
             brand,
             stock,
+            long_description,
             imagePath,
             extraImages,
             slug,
@@ -99,10 +101,12 @@ class ProductsController {
         // Tạo đối tượng sản phẩm mới
         const newProduct = new Products({
             name,
+            description,
             price,
             categoriesId: new ObjectId(category), // Use new ObjectId here
             brandsId: new ObjectId(brand), // Use new ObjectId here
             stock,
+            long_description,
             imagePath,
             extraImages,
             slug,
@@ -154,17 +158,28 @@ class ProductsController {
         console.log("Vao updateProduct");
 
         const { id } = req.params;
-        const { name, price, category, brand, stock, imagePath, extraImages } =
-            req.body;
+        const {
+            name,
+            description,
+            price,
+            category,
+            brand,
+            stock,
+            long_description,
+            imagePath,
+            extraImages,
+        } = req.body;
 
         Products.findByIdAndUpdate(
             id,
             {
                 name,
                 price,
+                description,
                 categoriesId: category,
                 brandsId: brand,
                 stock,
+                long_description,
                 imagePath,
                 extraImages,
             },

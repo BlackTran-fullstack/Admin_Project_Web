@@ -3,6 +3,8 @@ const router = express.Router();
 
 const siteController = require("../app/controllers/SiteControllers");
 
+const { uploadAvatar } = require("../middlewares/multerAvatar");
+
 router.get("/dashboard", siteController.dashboard);
 
 router.get(
@@ -14,6 +16,12 @@ router.post(
     "/profile",
     siteController.checkAuthenticated,
     siteController.profilePost
+);
+
+router.post(
+    "/profile/update-avatar",
+    uploadAvatar,
+    siteController.updateAvatar
 );
 
 router.get(
