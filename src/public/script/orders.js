@@ -1,3 +1,13 @@
+let statusFilter = "";
+
+document.addEventListener("DOMContentLoaded", () => {
+    const filter = document.querySelector(".filter");
+    filter.addEventListener("change", (event) => {
+        statusFilter = event.target.value;
+        loadOrders();
+    });
+});
+
 function formattedDate(date) {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -17,11 +27,11 @@ function formattedTotal(total) {
 
 async function loadOrders(
     page = 1,
-    limit = 1,
+    limit = 3,
     sortBy = "createdAt",
     order = "asc",
-    search = "",
-    fields = "deliveryUnit,paymentMethod,status"
+    search = statusFilter,
+    fields = "status"
 ) {
     try {
         const queryParameters = new URLSearchParams({

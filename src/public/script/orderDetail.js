@@ -1,6 +1,6 @@
 async function loadOrderDetail(
     page = 1,
-    limit = 1,
+    limit = 3,
     sortBy = "createdAt",
     order = "asc",
     search = "",
