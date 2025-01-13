@@ -23,4 +23,8 @@ router.get("/api/orderTimes", ordersControllers.getOrderTimes);
 
 router.get("/api/numberOfOrders", ordersControllers.getNumberOfOrders);
 
+router.get("/api/revenue", ordersControllers.getRevenue);
+
+router.get("/api/topProducts", ordersControllers.getTopProducts);
+
 module.exports = router;

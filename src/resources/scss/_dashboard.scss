@@ -59,7 +59,7 @@
     .dashboard__content {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
         gap: 30px;
         margin-top: 30px;
 
@@ -99,6 +99,26 @@
             grid-row: 2;
 
             #number_of_orders_chart{
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .total_revenue {
+            grid-column: 1;
+            grid-row: 3;
+
+            #total_revenue_chart{
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .top_products {
+            grid-column: 2;
+            grid-row: 3;
+
+            #top_products_chart{
                 width: 100%;
                 height: 100%;
             }

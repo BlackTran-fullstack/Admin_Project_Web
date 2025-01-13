@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Products = require("../models/Products");
 const Orders = require("../models/Orders");
 const OrderDetails = require("../models/OrderDetails");
@@ -232,6 +233,106 @@ class OrdersController {
         }
     }
     
+    // [GET] /orders/api/revenue day by day
+    async getRevenue(req, res) {
+        try {
+            const { year, month } = req.query;
+            const revenue = await Orders.aggregate([
+                {
+                    $match: {
+                        $expr: {
+                            $and: [
+                                { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
+                                { $eq: [{ $month: "$createdAt" }, parseInt(month)] },
+                            ],
+                        },
+                    },
+                },
+                {
+                    $group: {
+                        _id: { $dayOfMonth: "$createdAt" },
+                        total: { $sum: "$total" },
+                    },
+                },
+            ]);
+
+            res.json(revenue);
+        } catch (error) {
+            console.error("Error in getRevenue:", error);
+            res.status(500).json({
+                success: false,
+                errors: ["Server error. Please try again later."],
+            });
+        }
+    }
+
+    // [GET] /orders/api/topProducts
+    async getTopProducts(req, res) {
+        try {
+            const { day, month, year } = req.query;
+            const topProducts = await OrderDetails.aggregate([
+                {
+                    $lookup: {
+                        from: "orders",
+                        localField: "orderId",
+                        foreignField: "_id",
+                        as: "order",
+                    },
+                },
+                {
+                    $unwind: "$order",
+                },
+                {
+                    $match: {
+                        $expr: {
+                            $and: [
+                                { $eq: [{ $year: "$order.createdAt" }, parseInt(year)] },
+                                { $eq: [{ $month: "$order.createdAt" }, parseInt(month)] },
+                                { $eq: [{ $dayOfMonth: "$order.createdAt" }, parseInt(day)] },
+                            ],
+                        },
+                    },
+                },
+                {
+                    $group: {
+                        _id: "$productId",
+                        count: { $sum: "$quantity" },
+                    },
+                },
+                {
+                    $sort: { count: -1 },
+                },
+                {
+                    $limit: 5,
+                },
+            ]);
+
+            console.log("Top Products:", topProducts);
+
+            // Convert product IDs to ObjectId
+            const productIds = topProducts.map(product => new mongoose.Types.ObjectId(product._id));
+
+            // Fetch product details
+            const products = await Products.find({ _id: { $in: productIds } });
+
+            // Map product details to topProducts
+            const topProductsWithDetails = topProducts.map(product => {
+                const productDetail = products.find(p => p._id.equals(product._id));
+                return {
+                    ...product,
+                    product: productDetail ? productDetail.toObject() : null,
+                };
+            });
+
+            res.json(topProductsWithDetails);
+        } catch (error) {
+            console.error("Error in getTopProducts:", error);
+            res.status(500).json({
+                success: false,
+                errors: ["Server error. Please try again later."],
+            });
+        }
+    }
 }
 
 module.exports = new OrdersController();
