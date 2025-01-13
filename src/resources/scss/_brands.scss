@@ -5,6 +5,10 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 1.5rem;
+
+        @media (max-width: 768px) {
+            margin-top: 4rem;
+        }
     }
 
     .header-page {
@@ -97,7 +101,7 @@
 
         .table {
             width: 100%;
-            min-width: 1000px;
+            min-width: 400px;
             border-collapse: separate;
             border-spacing: 0;
             border-radius: 12px;
@@ -135,11 +139,11 @@
                 }
 
                 &:nth-child(2) {
-                    width: 35%;
+                    width: 25%;
                 }
 
                 &:nth-child(3) {
-                    width: 15%;
+                    width: 25%;
                 }
             }
 

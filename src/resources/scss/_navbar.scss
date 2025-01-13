@@ -178,6 +178,7 @@
     overflow-y: hidden;
     scrollbar-width: none;
     margin: 13px;
+    z-index: 9999;
   }
 
   #sidebar.menu-active {

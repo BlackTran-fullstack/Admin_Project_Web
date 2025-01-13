@@ -46,6 +46,13 @@ button {
     cursor: pointer;
 }
 
+@media (max-width: 768px) {
+    main {
+        margin: 0;
+    }
+    
+}
+
 @import "navbar";
 @import "accounts";
 @import "accountDetails";

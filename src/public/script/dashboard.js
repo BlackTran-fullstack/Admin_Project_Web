@@ -209,8 +209,6 @@ async function drawTopProductsChart() {
 
     const topProducts = await getTopProducts(day, month, year);
 
-    console.log("topProducts", topProducts);
-
     // Check if there is no data
     if (topProducts.length === 0) {
         topProductsContainer.innerHTML = "<p>No data available for the selected period.</p>";
