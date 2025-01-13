@@ -16,4 +16,11 @@ router.get("/orderDetails/:orderId", ordersControllers.orderDetails);
 
 router.get("/", ordersControllers.getOrders);
 
+// dashboard data
+router.get("/api/yearly_sales", ordersControllers.getYearlySales);
+
+router.get("/api/orderTimes", ordersControllers.getOrderTimes);
+
+router.get("/api/numberOfOrders", ordersControllers.getNumberOfOrders);
+
 module.exports = router;

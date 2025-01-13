@@ -1,0 +1,107 @@
+#dashboard {
+    width: 100%;
+    overflow-y: auto;
+
+    h1 {
+        font-size: 2.4rem;
+        font-weight: 600;
+        color: #333;
+
+        @media (min-width: 768px) {
+            font-size: 3.2rem;
+        }
+    }
+
+    .dashboard__filters {
+        display: flex;
+        margin-top: 30px;
+        justify-content: space-between;
+
+        .dashboard__filters__item {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+    
+            &:focus {
+                border-color: #b88e2f;
+            }
+        }
+    
+        select{
+            background-color: #fff;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+    
+            &:focus {
+                border-color: #b88e2f;
+            }
+        }
+    }
+
+    
+
+    .dashboard__content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 30px;
+        margin-top: 30px;
+
+        .dashboard__content__item {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .yearly_sales {
+            grid-column: 1 / 3; // Spans from column 1 to column 3
+            grid-row: 1;        // Occupies row 1
+            height: 400px;
+
+            #yearly_sales_chart{
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .order_times {
+            grid-column: 1;
+            grid-row: 2;
+
+            #order_times_chart{
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .number_of_orders {
+            grid-column: 2;
+            grid-row: 2;
+
+            #number_of_orders_chart{
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}

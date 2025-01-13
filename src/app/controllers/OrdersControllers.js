@@ -124,6 +124,114 @@ class OrdersController {
             });
         }
     }
+
+    // dashboard data
+    // [GET] /orders/api/yearly_sales
+    // const response = await fetch(`/orders/api/yearly_sales?year=${year}`);
+    async getYearlySales(req, res) {
+        try {
+            const { year } = req.query;
+            const monthlySales = await Orders.aggregate([
+                {
+                    $match: {
+                        $expr: { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
+                    },
+                },
+                {
+                    $group: {
+                        _id: { $month: "$createdAt" },
+                        total: { $sum: "$total" },
+                    },
+                },
+            ]);
+
+            res.json(monthlySales);
+        } catch (error) {
+            console.error("Error in getYearlySales:", error);
+            res.status(500).json({
+                success: false,
+                errors: ["Server error. Please try again later."],
+            });
+        }
+    }
+
+    // [GET] /orders/api/orderTimes
+    // morning: 6am - 12pm afternoon: 12pm - 6pm evening: 6pm - 12am night: 12am - 6am
+    async getOrderTimes(req, res) {
+        const { year } = req.query;
+        try {
+            const orderTimes = await Orders.aggregate([
+                {
+                    $match: {
+                        $expr: { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
+                    },
+                },
+                {
+                    $project: {
+                        hour: { $hour: "$createdAt" },
+                    },
+                },
+                {
+                    $group: {
+                        _id: {
+                            $switch: {
+                                branches: [
+                                    { case: { $and: [{ $gte: ["$hour", 6] }, { $lt: ["$hour", 12] }] }, then: "Morning" },
+                                    { case: { $and: [{ $gte: ["$hour", 12] }, { $lt: ["$hour", 18] }] }, then: "Afternoon" },
+                                    { case: { $and: [{ $gte: ["$hour", 18] }, { $lt: ["$hour", 24] }] }, then: "Evening" },
+                                    { case: { $and: [{ $gte: ["$hour", 0] }, { $lt: ["$hour", 6] }] }, then: "Night" },
+                                ],
+                                default: "Unknown",
+                            },
+                        },
+                        count: { $sum: 1 },
+                    },
+                },
+            ]);
+
+            res.json(orderTimes);
+        } catch (error) {
+            console.error("Error in getOrderTimes:", error);
+            res.status(500).json({
+                success: false,
+                errors: ["Server error. Please try again later."],
+            });
+        }
+    }
+
+    // [GET] /orders/api/numberOfOrders day by day 
+    async getNumberOfOrders(req, res) {
+        try {
+            const { year, month } = req.query;
+            const numberOfOrders = await Orders.aggregate([
+                {
+                    $match: {
+                        $expr: {
+                            $and: [
+                                { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
+                                { $eq: [{ $month: "$createdAt" }, parseInt(month)] },
+                            ],
+                        },
+                    },
+                },
+                {
+                    $group: {
+                        _id: { $dayOfMonth: "$createdAt" },
+                        count: { $sum: 1 },
+                    },
+                },
+            ]);
+
+            res.json(numberOfOrders);
+        } catch (error) {
+            console.error("Error in getNumberOfOrders:", error);
+            res.status(500).json({
+                success: false,
+                errors: ["Server error. Please try again later."],
+            });
+        }
+    }
+    
 }
 
 module.exports = new OrdersController();
