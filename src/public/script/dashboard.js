@@ -42,7 +42,7 @@ async function drawCharts() {
 }
 
 async function getYearlySales(startDate, endDate) {
-    const response = await fetch(`/orders/api/yearlySales?year=${startDate}&endDate=${endDate}`);
+    const response = await fetch(`/orders/api/yearlySales?startDate=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
@@ -62,7 +62,7 @@ async function drawYearlySalesChart() {
     // Format the data for Google Charts
     const dataArray = [['Month', 'Sales']];
     salesData.forEach(sale => {
-        dataArray.push([`Month ${sale._id}`, sale.total]);
+        dataArray.push([`Month ${sale._id.month}/${sale._id.year}`, sale.total]);
     });
 
     const data = google.visualization.arrayToDataTable(dataArray);
@@ -80,7 +80,7 @@ async function drawYearlySalesChart() {
 }
 
 async function getOrderTimes(startDate, endDate) {
-    const response = await fetch(`/orders/api/orderTimes?year=${startDate}&endDate=${endDate}`);
+    const response = await fetch(`/orders/api/orderTimes?startDate=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
@@ -116,7 +116,7 @@ async function drawOrderTimesChart() {
 }
 
 async function getNumberOfOrders(startDate, endDate) {
-    const response = await fetch(`/orders/api/numberOfOrders?year=${startDate}&endDate=${endDate}`);
+    const response = await fetch(`/orders/api/numberOfOrders?startDate=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
@@ -154,7 +154,7 @@ async function drawNumberOfOrdersChart() {
 }
 
 async function getRevenue(startDate, endDate) {
-    const response = await fetch(`/orders/api/revenue?year=${startDate}&endDate=${endDate}`);
+    const response = await fetch(`/orders/api/revenue?startDate=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }
@@ -192,7 +192,7 @@ async function drawRevenueChart() {
 }
 
 async function getTopRevenueProducts(startDate, endDate) {
-    const response = await fetch(`/orders/api/topRevenueProducts?year=${startDate}&endDate=${endDate}`);
+    const response = await fetch(`/orders/api/topRevenueProducts?startDate=${startDate}&endDate=${endDate}`);
     const data = await response.json();
     return data;
 }

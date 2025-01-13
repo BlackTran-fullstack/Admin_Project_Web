@@ -131,27 +131,32 @@ class OrdersController {
     async getYearlySales(req, res) {
         try {
             const { startDate, endDate } = req.query;
-            console.log("Start Date:", startDate);
-            console.log("End Date:", endDate);
+            const nextEndDate = new Date(endDate);
+            nextEndDate.setDate(nextEndDate.getDate() + 1);
             const yearlySales = await Orders.aggregate([
                 {
                     $match: {
                         $expr: {
                             $and: [
-                                { $gte: ["$createdAt", new Date(startDate)] },
-                                { $lte: ["$createdAt", new Date(endDate)] },
+                                { $expr: { $gte: [{ $toDate: "$createdAt" }, new Date(startDate)] } },
+                                { $expr: { $lte: [{ $toDate: "$createdAt" }, nextEndDate] } },
                             ],
                         },
                     },
                 },
                 {
                     $group: {
-                        _id: { $month: "$createdAt" },
+                        _id: {
+                            month: { $month: "$createdAt" },
+                            year: { $year: "$createdAt" }
+                        },
                         total: { $sum: "$total" },
                     },
                 },
             ]);
 
+            console.log("startDate:", startDate);
+            console.log("endDate:", endDate);
             console.log("Yearly Sales:", yearlySales);
 
             res.json(yearlySales);
@@ -169,13 +174,15 @@ class OrdersController {
     async getOrderTimes(req, res) {
         try {
             const { startDate, endDate } = req.query;
+            const nextEndDate = new Date(endDate);
+            nextEndDate.setDate(nextEndDate.getDate() + 1);
             const orderTimes = await Orders.aggregate([
                 {
                     $match: {
                         $expr: {
                             $and: [
                                 { $gte: ["$createdAt", new Date(startDate)] },
-                                { $lte: ["$createdAt", new Date(endDate)] },
+                                { $lte: ["$createdAt", nextEndDate] },
                             ],
                         },
                     },
@@ -216,13 +223,15 @@ class OrdersController {
     async getNumberOfOrders(req, res) {
         try {
             const { startDate, endDate } = req.query;
+            const nextEndDate = new Date(endDate);
+            nextEndDate.setDate(nextEndDate.getDate() + 1);
             const numberOfOrders = await Orders.aggregate([
                 {
                     $match: {
                         $expr: {
                             $and: [
                                 { $gte: ["$createdAt", new Date(startDate)] },
-                                { $lte: ["$createdAt", new Date(endDate)] },
+                                { $lte: ["$createdAt", nextEndDate] },
                             ],
                         },
                     },
@@ -249,13 +258,15 @@ class OrdersController {
     async getRevenue(req, res) {
         try {
             const { startDate, endDate } = req.query;
+            const nextEndDate = new Date(endDate);
+            nextEndDate.setDate(nextEndDate.getDate() + 1);
             const revenue = await Orders.aggregate([
                 {
                     $match: {
                         $expr: {
                             $and: [
                                 { $gte: ["$createdAt", new Date(startDate)] },
-                                { $lte: ["$createdAt", new Date(endDate)] },
+                                { $lte: ["$createdAt", nextEndDate] },
                             ],
                         },
                     },
@@ -283,6 +294,8 @@ class OrdersController {
     async getTopRevenueProducts(req, res) {
         try {
             const { startDate, endDate } = req.query;
+            const nextEndDate = new Date(endDate);
+            nextEndDate.setDate(nextEndDate.getDate() + 1);
             const topRevenueProducts = await OrderDetails.aggregate([
                 {
                     $lookup: {
@@ -311,7 +324,7 @@ class OrdersController {
                         $expr: {
                             $and: [
                                 { $gte: ["$order.createdAt", new Date(startDate)] },
-                                { $lte: ["$order.createdAt", new Date(endDate)] },
+                                { $lte: ["$order.createdAt", nextEndDate] },
                             ],
                         },
                     },
